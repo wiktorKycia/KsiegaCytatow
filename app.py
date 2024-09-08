@@ -7,6 +7,9 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'ksiegacytatow'
+
+mysql = MySQL(app)
+
 app.register_blueprint(home, url_prefix='/home')
 
 @app.route('/')
