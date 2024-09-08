@@ -4,6 +4,10 @@ home = Blueprint('home', __name__)
 
 @home.route('/')
 def homepage():
+    """
+    The first page that the user sees when entering an app
+    :return: html
+    """
     return render_template('home/index.html', title='Home', content='home')
 
 @home.route('/database')
