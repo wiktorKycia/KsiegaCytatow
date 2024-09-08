@@ -4,7 +4,7 @@ app = Flask(__name__)
 app.register_blueprint(home, url_prefix='/home')
 
 @app.route('/')
-def home():
+def index():
     return redirect(url_for('home/'))
 
 
