@@ -1,7 +1,11 @@
+# Imports
 from flask import Blueprint, render_template
 from db import mysql
+
+# Parent route
 home = Blueprint('home', __name__)
 
+# Routes
 @home.route('/')
 def homepage():
     """
@@ -10,6 +14,8 @@ def homepage():
     """
     return render_template('home/index.html', title='Home', content='home')
 
+
+# this is only a temporary route, it should be moved to /admin/database/users
 @home.route('/database')
 def database():
     cursor = mysql.connection.cursor()
