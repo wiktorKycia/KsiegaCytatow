@@ -52,6 +52,12 @@ def userhomepage():
         # the user is not logged in, so we redirect him back to login
         return redirect(url_for('home.login'))
 
+@home.route('/logout')
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("home.login"))
+
+
 # this is only a temporary route, it should be moved to /admin/database/users
 @home.route('/database')
 def database():
