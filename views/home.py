@@ -29,7 +29,9 @@ def login():
         if len(users) > 1:
             return abort(500)
         else:
+            session.permanent = True
             user = users[0]
+            session['user'] = user[0]
             return f"""
             username: {user[0]}<br/>
             email: {user[1]}<br/>
