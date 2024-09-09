@@ -1,5 +1,5 @@
 # Imports
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, abort
 from db import mysql
 
 # Parent route
@@ -26,9 +26,15 @@ def login():
         (request.form['username'], request.form['username'], request.form['password']))
         users = cursor.fetchall()
         cursor.close()
-        print(users)
-        print(type(users))
-        return f"{users} <br/> {type(users)}"
+        if len(users) > 1:
+            return abort(500)
+        else:
+            user = users[0]
+            return f"""
+            username: {user[0]}<br/>
+            email: {user[1]}<br/>
+            password: {user[2]}<br/>
+            """
 
 
 # this is only a temporary route, it should be moved to /admin/database/users
