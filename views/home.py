@@ -19,7 +19,16 @@ def login():
     if request.method == 'GET':
         return render_template('home/login.html')
     elif request.method == 'POST':
-        pass
+        cursor = mysql.connection.cursor()
+        cursor.execute('''
+        SELECT name, email, user_password FROM users 
+        WHERE (name=%s OR email=%s) AND user_password=%s''',
+        (request.form['username'], request.form['username'], request.form['password']))
+        users = cursor.fetchall()
+        cursor.close()
+        print(users)
+        print(type(users))
+        return f"{users} <br/> {type(users)}"
 
 
 # this is only a temporary route, it should be moved to /admin/database/users
