@@ -14,6 +14,13 @@ def homepage():
     """
     return render_template('home/index.html', title='Home', content='home')
 
+@home.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
+        pass
+
 
 # this is only a temporary route, it should be moved to /admin/database/users
 @home.route('/database')
