@@ -25,12 +25,38 @@ see more information about database [here](database_info/info.md)
 ### Installation
 
 #### IDE
-For IDE I would recommend [PyCharm](https://www.jetbrains.com/pycharm/download/?section=windows) like I am using or alternatively [Visual Studio Code](https://code.visualstudio.com/download).
-You don't have to have the Professional version of PyCharm - the Community one will be enough.
-You can also use any other IDE, however they are not included in this tutorial.
+- For IDE I would recommend [PyCharm](https://www.jetbrains.com/pycharm/download/?section=windows) like I am using or alternatively [Visual Studio Code](https://code.visualstudio.com/download).
+- You don't have to have the Professional version of PyCharm - the Community one will be enough.
+- You can also use any other IDE, however they are not included in this tutorial.
 
 #### Tools
-You will obviously need Python programming language ([version 3.12](https://www.python.org/downloads/))
-For database you will need the [XAMPP enviroment](https://www.apachefriends.org/pl/download.html)
+- You will obviously need Python programming language ([version 3.12](https://www.python.org/downloads/))
+- For database you will need the [XAMPP enviroment](https://www.apachefriends.org/pl/download.html)
+
+### Setting up a project
+* After you install the .zip file and unzip it on your computer, open the folder in an IDE
+* open the terminal in your IDE (Ctrl+Shift+` in VSCode, Alt+F12 in PyCharm)
+* if there is no venv (virtual enviroment) create it:
+```bash
+python -m venv venv
+```
+Run the command in the terminal
+...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
