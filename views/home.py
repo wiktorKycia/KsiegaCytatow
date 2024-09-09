@@ -45,11 +45,11 @@ def login():
 
 @home.route('/user')
 def userhomepage():
-    # the user is logged in so we allow him to view his page
+    # the user is logged in, so we allow him to view his page
     if "user" in session:
         return f"Hello {session['user']}"
     else:
-        # the user is not logged in so we redirect him back to login
+        # the user is not logged in, so we redirect him back to login
         return redirect(url_for('home.login'))
 
 # this is only a temporary route, it should be moved to /admin/database/users
