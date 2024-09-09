@@ -38,6 +38,9 @@ def login():
             password: {user[2]}<br/>
             """
 
+@home.route('/<user>')
+def userhomepage(user):
+    return f"Hello {user}"
 
 # this is only a temporary route, it should be moved to /admin/database/users
 @home.route('/database')
