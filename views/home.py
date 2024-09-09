@@ -16,7 +16,9 @@ def homepage():
 
 @home.route('/login', methods=['GET', 'POST'])
 def login():
+    # the user enters the /login by the link in browser
     if request.method == 'GET':
+        # if the user is already logged in, push him back to his user page
         if "user" in session:
             return redirect(url_for('home.userhomepage'))
         return render_template('home/login.html')
