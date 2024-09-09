@@ -1,5 +1,5 @@
 # Imports
-from flask import Blueprint, render_template, request, redirect, url_for, abort
+from flask import Blueprint, render_template, request, redirect, url_for, abort, session
 from db import mysql
 
 # Parent route
