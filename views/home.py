@@ -47,7 +47,7 @@ def login():
 def userhomepage():
     # the user is logged in, so we allow him to view his page
     if "user" in session:
-        return f"Hello {session['user']}"
+        return render_template('home/user.html', username=session['user'])
     else:
         # the user is not logged in, so we redirect him back to login
         return redirect(url_for('home.login'))
