@@ -2,7 +2,7 @@
 Python Flask app, that is being created to save
 some funny things that teachers often say
 
-## Technical stuff how it works
+## Technical stuff and how it works
 
 ### Database
 The app connects to MariaDB database in XAMPP
@@ -19,3 +19,18 @@ see more information about database [here](database_info/info.md)
 - api
   - for others that will create a better looking front-end app
   - to be able to create a discord bot, that will retrieve new quotes from discord
+
+## How do I run this on my own computer?
+
+### Installation
+
+#### IDE
+For IDE I would recommend [PyCharm](https://www.jetbrains.com/pycharm/download/?section=windows) like I am using or alternatively [Visual Studio Code](https://code.visualstudio.com/download).
+You don't have to have the Professional version of PyCharm - the Community one will be enough.
+You can also use any other IDE, however they are not included in this tutorial.
+
+#### Tools
+You will obviously need Python programming language ([version 3.12](https://www.python.org/downloads/))
+For database you will need the [XAMPP enviroment](https://www.apachefriends.org/pl/download.html)
+
+
