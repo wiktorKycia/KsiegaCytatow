@@ -32,11 +32,7 @@ def login():
             session.permanent = True
             user = users[0]
             session['user'] = user[0]
-            return f"""
-            username: {user[0]}<br/>
-            email: {user[1]}<br/>
-            password: {user[2]}<br/>
-            """
+            return redirect(url_for('home.userhomepage', user=session['user']))
 
 @home.route('/<user>')
 def userhomepage(user):
