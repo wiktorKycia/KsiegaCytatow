@@ -32,11 +32,14 @@ def login():
             session.permanent = True
             user = users[0]
             session['user'] = user[0]
-            return redirect(url_for('home.userhomepage', user=session['user']))
+            return redirect(url_for('home.userhomepage'))
 
-@home.route('/<user>')
-def userhomepage(user):
-    return f"Hello {user}"
+@home.route('/user')
+def userhomepage():
+    if "user" in session:
+        return f"Hello {session['user']}"
+    else:
+        return redirect(url_for('home.login'))
 
 # this is only a temporary route, it should be moved to /admin/database/users
 @home.route('/database')
