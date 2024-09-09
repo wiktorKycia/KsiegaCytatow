@@ -9,7 +9,7 @@ The app connects to MariaDB database in XAMPP
 
 see more information about database [here](database_info/info.md)
 
-### Features
+### Features (future)
 - searching the quotes
 - liking quotes
 - adding quotes
