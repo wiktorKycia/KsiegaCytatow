@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- Other html documents inherit from this document -->
+<!-- It consists of bootstrap links, header, nav and footer -->
+<html lang="pl">
+<head>
+    <meta name="author" content="Wiktor Kycia"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav></nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer></footer>
+</body>
+</html>
