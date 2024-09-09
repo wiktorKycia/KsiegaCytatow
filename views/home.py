@@ -17,7 +17,7 @@ def homepage():
 @home.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        pass
+        return render_template('home/login.html')
     elif request.method == 'POST':
         pass
 
