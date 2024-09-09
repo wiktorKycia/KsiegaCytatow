@@ -17,6 +17,8 @@ def homepage():
 @home.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
+        if "user" in session:
+            return redirect(url_for('home.userhomepage'))
         return render_template('home/login.html')
     elif request.method == 'POST':
         cursor = mysql.connection.cursor()
