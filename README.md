@@ -40,11 +40,23 @@ see more information about database [here](database_info/info.md)
 ```bash
 python -m venv venv
 ```
-Run the command in the terminal
-...
-
-
-
+Run the command in the terminal (If you are on Linux or MacOS: type `python3` instead of `python`)
+* activate the venv by typing:
+```bash
+.\venv\Scripts\activate
+```
+* type `R` to run venv once
+* install flask and flask_mysqldb
+```bash
+pip install flask
+pip install flask_mysqldb
+```
+(If you are on Linux or MacOS: type `pip3` instead of `pip`)
+* to run the project execute interminal:
+```bash
+python app.py
+```
+(If you are on Linux or MacOS: type `python3` instead of `python`)
 
 
 
