@@ -8,7 +8,7 @@ admin = Blueprint('admin', __name__)
 # Routes
 @admin.route('/')
 def admin_home_page():
-    return "admin homepage"
+    return render_template('admin/index.html')
 
 @admin.route('/quotes')
 def admin_quotes():
