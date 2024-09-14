@@ -21,7 +21,13 @@ def admin_quotes():
 
 @admin.route('/users')
 def admin_users():
-    return "list of users here, with full access to add, modify, delete and update"
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM users')
+    users = cursor.fetchall()
+    cursor.execute('DESCRIBE users')
+    columns = cursor.fetchall()
+    cursor.close()
+    return render_template("admin/users.html", data=users, columns=columns)
 
 @admin.route('/nicknames')
 def admin_nicknames():
