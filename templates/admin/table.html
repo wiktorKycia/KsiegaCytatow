@@ -7,7 +7,7 @@
         </caption>
         <thead>
             <tr>
-                {% for column_name in data[0] %}
+                {% for column_name in columns %}
                 	<th scope="col">{{ column_name }}</th>
                 {% endfor %}
             </tr>
@@ -24,7 +24,7 @@
         <tfoot>
             <tr>
                 <td><button>Add</button></td>
-                {% for col in data[0] %}
+                {% for col in columns[1:] %}
                     <td><input type="text"></td>
                 {% endfor %}
             </tr>
