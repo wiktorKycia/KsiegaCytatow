@@ -1,3 +1,7 @@
 {% set table_name = "Users" %}
 {#{% set data = {{ data }} %}#}
 {% extends 'admin/table.html' %}
+{% block content %}
+	{{ super() }}
+    <a href="/admin/">Panel admina</a>
+{% endblock %}
