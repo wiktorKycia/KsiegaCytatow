@@ -59,12 +59,3 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("home.login"))
 
-
-# this is only a temporary route, it should be moved to /admin/database/users
-@home.route('/database')
-def database():
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM users')
-    users = cursor.fetchall()
-    cursor.close()
-    return render_template('home/data.html', data=users)
