@@ -8,7 +8,14 @@
         <thead>
             <tr>
                 {% for column_name in columns %}
-                	<th scope="col">{{ column_name }}</th>
+                	<th scope="col">
+                        <details>
+                            <summary>{{ column_name[0] }}</summary>
+                            {% for i in column_name[1:] %}
+                                {{ i }}<br/>
+                            {% endfor %}
+                        </details>
+                    </th>
                 {% endfor %}
             </tr>
         </thead>
