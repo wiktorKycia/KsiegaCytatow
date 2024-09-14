@@ -1,12 +1,3 @@
-{% extends 'base.html' %}
-{% block title %}users{% endblock %}
-{% block content %}
-    <table>
-        <thead>
-
-        </thead>
-        {% for u in data %}
-            <li>{{ u }}</li>
-        {% endfor %}
-    </table>
-{% endblock %}
+{% set table_name = "Users" %}
+{#{% set data = {{ data }} %}#}
+{% extends 'admin/table.html' %}
