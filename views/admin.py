@@ -29,6 +29,13 @@ def admin_users():
     cursor.close()
     return render_template("admin/users.html", data=users, columns=columns)
 
+@admin.route('/users/<user>')
+def admin_user_detail(user):
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM users WHERE name = %s', user)
+    user_data = cursor.fetchone()
+    return render_template("admin/user.html", user=user_data)
+
 @admin.route('/nicknames')
 def admin_nicknames():
     return "list of nicknames here, with full access to add, modify, delete and update"
