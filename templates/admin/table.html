@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}{% block table_name %}{% endblock %}{% endblock %}
+{% block title %}{{ table_name }}{% endblock %}
 {% block content %}
     <table>
         <caption>
-            {% block table_name %}{% endblock %}
+            {{ table_name }}
         </caption>
         <thead>
             <tr>
