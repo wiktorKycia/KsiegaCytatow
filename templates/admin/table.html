@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}{% block table_name %}{% endblock %}
+{% block content %}
+    <table>
+        <caption>
+            {% block table_name %}
+        </caption>
+        <thead>
+            <tr>
+                {% for column_name in data[0] %}
+                	<th scope="col">{{ column_name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    {% for col in row %}
+                        <td>{{ col }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><button>Add</button></td>
+                {% for col in data[0] %}
+                    <td><input type="text"></td>
+                {% endfor %}
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
