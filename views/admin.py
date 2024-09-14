@@ -9,7 +9,7 @@ admin = Blueprint('admin', __name__)
 @admin.route('/')
 def admin_home_page():
     if "user" in session:
-        if session["user"] == "admin":
+        if session["user"] == "admin": # TODO: przerobić na sprawdzenie przez trust level
             return render_template('admin/index.html')
         else:
             abort(403)
