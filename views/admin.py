@@ -8,8 +8,13 @@ admin = Blueprint('admin', __name__)
 # Routes
 @admin.route('/')
 def admin_home_page():
-    return render_template('admin/index.html')
-
+    if "user" in session:
+        if session["user"] == "admin":
+            return render_template('admin/index.html')
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
 @admin.route('/quotes')
 def admin_quotes():
     return "list of quotes here, with full access to add, modify, delete and update"
