@@ -8,15 +8,26 @@ admin = Blueprint('admin', __name__)
 # Routes
 @admin.route('/')
 def admin_home_page():
-    return "admin homepage"
-
+    if "user" in session:
+        if session["user"] == "admin": # TODO: przerobić na sprawdzenie przez trust level
+            return render_template('admin/index.html')
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
 @admin.route('/quotes')
 def admin_quotes():
     return "list of quotes here, with full access to add, modify, delete and update"
 
 @admin.route('/users')
 def admin_users():
-    return "list of users here, with full access to add, modify, delete and update"
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM users')
+    users = cursor.fetchall()
+    cursor.execute('DESCRIBE users')
+    columns = cursor.fetchall()
+    cursor.close()
+    return render_template("admin/users.html", data=users, columns=columns)
 
 @admin.route('/nicknames')
 def admin_nicknames():

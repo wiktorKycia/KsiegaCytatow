@@ -33,6 +33,8 @@ def login():
         # save the results from the database
         users:tuple[tuple[str, str, str]] = cursor.fetchall()
         cursor.close()
+        if not users:
+            return redirect(url_for('home.login'))
         # if the database would somehow return 2 rows instead of 1
         if len(users) > 1:
             return abort(500)
