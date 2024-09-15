@@ -27,4 +27,5 @@ def get_profile_owner(endpoint, values):
 @profile.route('/')
 def user_profile():
     user = g.profile_owner  # Get the user from the preprocessor
-    return render_template('profile.html', user=user)
+    # return render_template('profile.html', user=user)
+    return f'this is {user}' # TODO: template for user profile page
