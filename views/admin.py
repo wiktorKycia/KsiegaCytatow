@@ -19,7 +19,7 @@ def admin_home_page():
 def admin_quotes():
     return "list of quotes here, with full access to add, modify, delete and update"
 
-@admin.route('/users')
+@admin.route('/users/')
 def admin_users():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM users')
@@ -32,7 +32,7 @@ def admin_users():
 @admin.route('/users/<user>')
 def admin_user_detail(user):
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM users WHERE name = %s', user)
+    cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
     user_data = cursor.fetchone()
     return render_template("admin/user.html", user=user_data)
 
