@@ -26,6 +26,8 @@ def get_profile_owner(endpoint, values):
 # Route to display the user profile
 @profile.route('/')
 def user_profile():
+    # TODO: enter only when the user is logged in
+    # TODO: privacy: do not allow the user to see other user's profile pages
     user = g.profile_owner  # Get the user from the preprocessor
     # return render_template('profile.html', user=user)
     return f'this is {user}' # TODO: template for user profile page

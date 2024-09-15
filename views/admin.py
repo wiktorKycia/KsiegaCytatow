@@ -5,6 +5,12 @@ from db import mysql
 # Parent route
 admin = Blueprint('admin', __name__)
 
+# To all routes in admin:
+# TODO: when admin is not logged in redirect to login (or admin)
+
+# TODO: To routes: /quotes, /authors, /nicknames -> make html templates for those
+# TODO: to routes: /quotes, /authors, /nicknames, /users/ -> only user of trust_level of 3 can see these
+
 # Routes
 @admin.route('/')
 def admin_home_page():
@@ -31,6 +37,7 @@ def admin_users():
 
 @admin.route('/users/<user>')
 def admin_user_detail(user):
+    # TODO: only admin can see this, not a user with trust_level = 3
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
     user_data = cursor.fetchone()
