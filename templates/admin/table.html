@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}{{ table_name }}{% endblock %}
+{% block content %}
+    <table>
+        <caption>
+            {{ table_name }}
+        </caption>
+        <thead>
+            <tr>
+                {% for column_name in columns %}
+                	<th scope="col">
+                        <details>
+                            <summary>{{ column_name[0] }}</summary>
+                            {% for i in column_name[1:] %}
+                                {{ i }}<br/>
+                            {% endfor %}
+                        </details>
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    {% for col in row %}
+                        <td>{{ col }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><button>Add</button></td>
+                {% for col in columns[1:] %}
+                    <td><input type="text"></td>
+                {% endfor %}
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
