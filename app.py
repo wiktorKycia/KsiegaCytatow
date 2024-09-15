@@ -17,6 +17,11 @@ app.config['MYSQL_DB'] = 'ksiegacytatow'
 
 mysql.init_app(app)
 
+# no need for db.py
+# mysql = MySQL(app)
+# app.mysql = mysql  # Make `mysql` accessible via `current_app`
+# then in views: from flask_mysqldb import MySQLdb, current_app
+
 # Session config
 app.config['SECRET_KEY'] = token_hex(32)
 app.permanent_session_lifetime = timedelta(days=1)
