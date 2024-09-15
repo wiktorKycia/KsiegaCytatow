@@ -4,6 +4,7 @@ from flask import Flask, render_template, redirect, url_for
 from views import user
 from views.home import home
 from views.admin import admin
+from views.user import profile
 from db import mysql
 from secrets import token_hex
 from datetime import timedelta
