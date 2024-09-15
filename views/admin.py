@@ -49,7 +49,7 @@ def admin_database():
     if request.method == 'GET':
         if "user" in session:
             if session["user"] == "admin":
-                return render_template("admin/database.html", data=None)
+                return render_template("admin/database.html", data=None, query_value="")
             else:
                 abort(403)
         else:
@@ -59,4 +59,4 @@ def admin_database():
         cursor.execute(request.form['query'])
         data = cursor.fetchall()
         cursor.close()
-        return render_template("admin/database.html", data=data)
+        return render_template("admin/database.html", data=data, query_value=request.form['query'])

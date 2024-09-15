@@ -4,7 +4,7 @@
     <a href="/admin/">back</a>
     <form action="#" method="POST">
         <label for="query">SQL:</label>
-        <input type="text" name="query" id="query">
+        <textarea name="query" id="query">{{ query_value }}</textarea>
         <input type="submit" value="Wykonaj">
     </form>
     {% if data %}
