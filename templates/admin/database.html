@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Database{% endblock %}
+{% block content %}
+    <a href="/admin/">back</a>
+    <form action="#" method="POST">
+        <label for="query">SQL:</label>
+        <input type="text" name="query" id="query">
+        <input type="submit" value="Wykonaj">
+    </form>
+    {% if data %}
+        <table>
+            <thead>
+                <tr>
+                    {% for column_name in data[0] %}
+                        <th scope="col">
+                            <details>
+                                <summary>{{ column_name[0] }}</summary>
+                                {% for i in column_name[1:] %}
+                                    {{ i }}<br/>
+                                {% endfor %}
+                            </details>
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data[1:] %}
+                    <tr>
+                        {% for col in row %}
+                            <td>{{ col }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
