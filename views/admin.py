@@ -43,3 +43,20 @@ def admin_nicknames():
 @admin.route('/authors')
 def admin_authors():
     return "list of authors here, with full access to add, modify, delete and update"
+
+@admin.route('/database', methods=['GET', 'POST'])
+def admin_database():
+    if request.method == 'GET':
+        if "user" in session:
+            if session["user"] == "admin":
+                return render_template("admin/database.html", data=None)
+            else:
+                abort(403)
+        else:
+            return redirect(url_for('home.login'))
+    elif request.method == 'POST':
+        cursor = mysql.connection.cursor()
+        cursor.execute(request.form['query'])
+        data = cursor.fetchall()
+        cursor.close()
+        return render_template("admin/database.html", data=data)
