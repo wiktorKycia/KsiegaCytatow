@@ -33,6 +33,8 @@ def login():
         # save the results from the database
         users:tuple[tuple[str, str, str]] = cursor.fetchall()
         cursor.close()
+        if not users:
+            return redirect(url_for('home.login'))
         # if the database would somehow return 2 rows instead of 1
         if len(users) > 1:
             return abort(500)
@@ -57,12 +59,3 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("home.login"))
 
-
-# this is only a temporary route, it should be moved to /admin/database/users
-@home.route('/database')
-def database():
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM users')
-    users = cursor.fetchall()
-    cursor.close()
-    return render_template('home/data.html', data=users)

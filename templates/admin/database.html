@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Database{% endblock %}
+{% block content %}
+    <a href="/admin/">back</a>
+    <form action="#" method="POST">
+        <label for="query">SQL:</label>
+        <textarea name="query" id="query">{{ query_value }}</textarea>
+        <input type="submit" value="Wykonaj">
+    </form>
+    {% if data %}
+        <table>
+            {% for row in data %}
+                <tr>
+                    {% for col in row %}
+                        <td>{{ col }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}
