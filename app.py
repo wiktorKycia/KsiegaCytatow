@@ -1,5 +1,7 @@
 # Imports
 from flask import Flask, render_template, redirect, url_for
+
+from views import user
 from views.home import home
 from views.admin import admin
 from db import mysql
@@ -29,6 +31,7 @@ app.permanent_session_lifetime = timedelta(days=1)
 # Blueprints
 app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(admin, url_prefix='/admin')
+app.register_blueprint(profile, url_prefix='/<user_url_slug>')
 
 # Main route
 @app.route('/')
