@@ -15,7 +15,11 @@ admin = Blueprint('admin', __name__)
 @admin.route('/')
 def admin_home_page():
     if "user" in session:
-        if session["user"] == "admin": # TODO: przerobić na sprawdzenie przez trust level
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT trust_level FROM user WHERE name = %s", (session['user'],))
+        trust_level = cursor.fetchone()[0]
+        cursor.close()
+        if trust_level >= 3:
             return render_template('admin/index.html')
         else:
             abort(403)
