@@ -20,6 +20,7 @@ def get_profile_owner(endpoint, values):
     if user is None:
         return "User not found", 404
 
+    # TODO: write to 'g' object only if the user is logged in, otherwise -> abort
     g.profile_owner = user  # Store the user info in the 'g' object
 
 
