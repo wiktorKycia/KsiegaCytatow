@@ -53,6 +53,10 @@ def admin_user_detail(user):
             user_data = cursor.fetchone()
             cursor.close()
             return render_template("admin/user.html", user=user_data)
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
 
 @admin.route('/nicknames')
 def admin_nicknames():
