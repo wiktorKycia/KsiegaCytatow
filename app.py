@@ -1,7 +1,10 @@
 # Imports
 from flask import Flask, render_template, redirect, url_for
+
+from views import user
 from views.home import home
 from views.admin import admin
+from views.user import profile
 from db import mysql
 from secrets import token_hex
 from datetime import timedelta
@@ -17,6 +20,11 @@ app.config['MYSQL_DB'] = 'ksiegacytatow'
 
 mysql.init_app(app)
 
+# no need for db.py
+# mysql = MySQL(app)
+# app.mysql = mysql  # Make `mysql` accessible via `current_app`
+# then in views: from flask_mysqldb import MySQLdb, current_app
+
 # Session config
 app.config['SECRET_KEY'] = token_hex(32)
 app.permanent_session_lifetime = timedelta(days=1)
@@ -24,6 +32,7 @@ app.permanent_session_lifetime = timedelta(days=1)
 # Blueprints
 app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(admin, url_prefix='/admin')
+app.register_blueprint(profile, url_prefix='/profile/<user_url_slug>')
 
 # Main route
 @app.route('/')
@@ -32,4 +41,5 @@ def index():
 
 # Run
 if __name__ == '__main__':
-    app.run()
+    with app.app_context():
+        app.run()
