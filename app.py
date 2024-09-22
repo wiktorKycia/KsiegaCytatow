@@ -32,7 +32,7 @@ app.permanent_session_lifetime = timedelta(days=1)
 # Blueprints
 app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(admin, url_prefix='/admin')
-app.register_blueprint(profile, url_prefix='/<user_url_slug>')
+app.register_blueprint(profile, url_prefix='/profile/<user_url_slug>')
 
 # Main route
 @app.route('/')
