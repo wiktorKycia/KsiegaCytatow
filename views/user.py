@@ -30,9 +30,11 @@ def get_profile_owner(endpoint, values):
 # Route to display the user profile
 @profile.route('/')
 def user_profile():
-    # TODO: privacy: do not allow the user to see other user's profile pages
-    user = g.profile_owner  # Get the user from the preprocessor
     if "user" in session:
-        return render_template("home/user.html", username=user)
+        if g.profile_owner.get('name') == session['user']:
+            user = g.profile_owner
+            return render_template("home/user.html", username=user)
+        else:
+            return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
         return redirect(url_for("home.login"))

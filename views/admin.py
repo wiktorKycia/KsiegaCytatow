@@ -16,7 +16,7 @@ admin = Blueprint('admin', __name__)
 def admin_home_page():
     if "user" in session:
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT trust_level FROM user WHERE name = %s", (session['user'],))
+        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
         trust_level = cursor.fetchone()[0]
         cursor.close()
         if trust_level >= 3:
