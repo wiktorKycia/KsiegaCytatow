@@ -1,6 +1,7 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session
 from db import mysql
+from flask_mysqldb import MySQLdb
 
 # Parent route
 admin = Blueprint('admin', __name__)
@@ -41,11 +42,17 @@ def admin_users():
 
 @admin.route('/users/<user>')
 def admin_user_detail(user):
-    # TODO: only admin can see this, not a user with trust_level = 3
-    cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
-    user_data = cursor.fetchone()
-    return render_template("admin/user.html", user=user_data)
+    if "user" in session:
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM users WHERE name = %s', (user,))
+        user = cursor.fetchone()
+        cursor.close()
+        if user.name == "admin" and session['user'] == "admin":
+            cursor = mysql.connection.cursor()
+            cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
+            user_data = cursor.fetchone()
+            cursor.close()
+            return render_template("admin/user.html", user=user_data)
 
 @admin.route('/nicknames')
 def admin_nicknames():
