@@ -44,11 +44,11 @@ def admin_users():
 def admin_user_detail(user):
     if "user" in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM users WHERE name = %s', (user,))
-        user = cursor.fetchone()
+        cursor.execute('SELECT * FROM users WHERE name = %s', (session['user'],))
+        usr = cursor.fetchone()
         cursor.close()
-        print(user)
-        if user['name'] == "admin" and session['user'] == "admin":
+        print(usr)
+        if usr['name'] == "admin" and session['user'] == "admin":
             cursor = mysql.connection.cursor()
             cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
             user_data = cursor.fetchone()
