@@ -38,8 +38,3 @@ def user_profile():
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
         return redirect(url_for("home.login"))
-    # user = g.profile_owner  # Get the user from the preprocessor
-    # if "user" in session:
-    #     return render_template("home/user.html", username=user)
-    # else:
-    #     return redirect(url_for("home.login"))
