@@ -28,7 +28,18 @@ def admin_home_page():
         return redirect(url_for('home.login'))
 @admin.route('/quotes')
 def admin_quotes():
-    return "list of quotes here, with full access to add, modify, delete and update"
+    if "user" in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+        trust_level = cursor.fetchone()[0]
+        cursor.close()
+        if trust_level >= 3:
+            return "list of quotes here, with full access to add, modify, delete and update"
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
+
 
 @admin.route('/users/')
 def admin_users():
@@ -67,11 +78,31 @@ def admin_user_detail(user):
 
 @admin.route('/nicknames')
 def admin_nicknames():
-    return "list of nicknames here, with full access to add, modify, delete and update"
+    if "user" in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+        trust_level = cursor.fetchone()[0]
+        cursor.close()
+        if trust_level >= 3:
+            return "list of nicknames here, with full access to add, modify, delete and update"
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
 
 @admin.route('/authors')
 def admin_authors():
-    return "list of authors here, with full access to add, modify, delete and update"
+    if "user" in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+        trust_level = cursor.fetchone()[0]
+        cursor.close()
+        if trust_level >= 3:
+            return "list of authors here, with full access to add, modify, delete and update"
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
 
 @admin.route('/database', methods=['GET', 'POST'])
 def admin_database():
