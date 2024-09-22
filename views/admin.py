@@ -32,13 +32,19 @@ def admin_quotes():
 
 @admin.route('/users/')
 def admin_users():
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM users')
-    users = cursor.fetchall()
-    cursor.execute('DESCRIBE users')
-    columns = cursor.fetchall()
-    cursor.close()
-    return render_template("admin/users.html", data=users, columns=columns)
+    if "user" in session:
+        if session['user'] == "admin":
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT * FROM users')
+            users = cursor.fetchall()
+            cursor.execute('DESCRIBE users')
+            columns = cursor.fetchall()
+            cursor.close()
+            return render_template("admin/users.html", data=users, columns=columns)
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
 
 @admin.route('/users/<user>')
 def admin_user_detail(user):
