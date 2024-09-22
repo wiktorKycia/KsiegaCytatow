@@ -31,9 +31,13 @@ def get_profile_owner(endpoint, values):
 @profile.route('/')
 def user_profile():
     if "user" in session:
-        print(g)
-        print(g.profile_owner)
-    return g
+        if g.profile_owner.get('name') == session['user']:
+            user = g.profile_owner
+            return render_template("home/user.html", username=user)
+        else:
+            return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
+    else:
+        return redirect(url_for("home.login"))
     # user = g.profile_owner  # Get the user from the preprocessor
     # if "user" in session:
     #     return render_template("home/user.html", username=user)
