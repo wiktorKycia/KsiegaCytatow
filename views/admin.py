@@ -47,7 +47,8 @@ def admin_user_detail(user):
         cursor.execute('SELECT * FROM users WHERE name = %s', (user,))
         user = cursor.fetchone()
         cursor.close()
-        if user.name == "admin" and session['user'] == "admin":
+        print(user)
+        if user['name'] == "admin" and session['user'] == "admin":
             cursor = mysql.connection.cursor()
             cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
             user_data = cursor.fetchone()
