@@ -93,6 +93,7 @@ def admin_nicknames():
         trust_level = cursor.fetchone()[0]
         cursor.close()
         if trust_level >= 3:
+            # TODO: grab the author's id and names, render table with links to author's nicknames
             return "list of nicknames here, with full access to add, modify, delete and update"
         else:
             abort(403)
@@ -128,8 +129,7 @@ def admin_nickname(author_id):
             abort(403)
     else:
         return redirect(url_for('home.login'))
-# TODO: in authors.html provide a link to a route that will grab the author's id, select the data from database
-# and redirect to nicknames/<author_id>
+
 @admin.route('/authors')
 def admin_authors():
     if "user" in session:
