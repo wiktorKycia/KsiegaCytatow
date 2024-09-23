@@ -109,8 +109,18 @@ def admin_nickname(author_id):
         if trust_level >= 3:
             cursor = mysql.connection.cursor()
             cursor.execute("""
-            SELECT CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name', 
-            FROM authors WHERE id = %s""", (author_id,))
+            SELECT n.nick
+            FROM 
+                authors a
+                LEFT JOIN authorsnicknames an on an.Author_id = a.id
+                RIGHT JOIN nicknames n on n.id = an.Nicknames_id
+            WHERE a.id = %s
+            """, (author_id,))
+            nicknames = cursor.fetchall()
+            cursor.execute("SELECT CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name' FROM authors a")
+            author_name = cursor.fetchone()
+            cursor.close()
+            return render_template("admin/nicknames.html", author=author_name,nicknames=nicknames)
         else:
             abort(403)
     else:
