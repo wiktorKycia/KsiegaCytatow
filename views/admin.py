@@ -107,7 +107,13 @@ def admin_authors():
         trust_level = cursor.fetchone()[0]
         cursor.close()
         if trust_level >= 3:
-            return "list of authors here, with full access to add, modify, delete and update"
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT * FROM authors")
+            authors = cursor.fetchall()
+            cursor.execute("DESCRIBE authors")
+            columns = cursor.fetchall()
+            cursor.close()
+            return render_template("admin/authors.html", data=authors, columns=columns)
         else:
             abort(403)
     else:
