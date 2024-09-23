@@ -34,6 +34,11 @@ def admin_quotes():
         trust_level = cursor.fetchone()[0]
         cursor.close()
         if trust_level >= 3:
+            cursor = mysql.connection.cursor()
+            cursor.execute("""
+            SELECT q.id, q.content, q.date, q.context, CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name'
+            FROM quotes q
+            LEFT OUTER JOIN authors a ON q.author_id = a.id""")
             return "list of quotes here, with full access to add, modify, delete and update"
         else:
             abort(403)
