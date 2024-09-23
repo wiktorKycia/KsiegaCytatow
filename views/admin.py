@@ -39,6 +39,8 @@ def admin_quotes():
             SELECT q.id, q.content, q.date, q.context, CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name'
             FROM quotes q
             LEFT OUTER JOIN authors a ON q.author_id = a.id""")
+            quotes = cursor.fetchall()
+            cursor.close()
             return "list of quotes here, with full access to add, modify, delete and update"
         else:
             abort(403)
