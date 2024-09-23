@@ -115,7 +115,8 @@ def admin_nickname(author_id):
             abort(403)
     else:
         return redirect(url_for('home.login'))
-
+# TODO: in authors.html provide a link to a route that will grab the author's id, select the data from database
+# and redirect to nicknames/<author_id>
 @admin.route('/authors')
 def admin_authors():
     if "user" in session:
