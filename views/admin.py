@@ -99,15 +99,18 @@ def admin_nicknames():
     else:
         return redirect(url_for('home.login'))
 
-@admin.route('/nicknames/<author>')
-def admin_nickname(author):
+@admin.route('/nicknames/<author_id>')
+def admin_nickname(author_id):
     if "user" in session:
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
         trust_level = cursor.fetchone()[0]
         cursor.close()
         if trust_level >= 3:
-            pass
+            cursor = mysql.connection.cursor()
+            cursor.execute("""
+            SELECT CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name', 
+            FROM authors WHERE id = %s""", (author_id,))
         else:
             abort(403)
     else:
