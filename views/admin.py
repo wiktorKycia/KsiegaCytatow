@@ -40,8 +40,10 @@ def admin_quotes():
             FROM quotes q
             LEFT OUTER JOIN authors a ON q.author_id = a.id""")
             quotes = cursor.fetchall()
+            cursor.execute("DESCRIBE quotes")
+            columns = cursor.fetchall()
             cursor.close()
-            return "list of quotes here, with full access to add, modify, delete and update"
+            return render_template("admin/quotes.html", data=quotes, columns=columns)
         else:
             abort(403)
     else:
