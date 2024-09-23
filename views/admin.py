@@ -123,7 +123,7 @@ def admin_nickname(author_id):
             WHERE a.id = cast(%s AS int)""", (author_id,))
             author_name = cursor.fetchone()
             cursor.close()
-            return render_template("admin/nicknames.html", author=author_name,nicknames=nicknames)
+            return render_template("admin/nicknames.html", author=author_name, data=nicknames)
         else:
             abort(403)
     else:
