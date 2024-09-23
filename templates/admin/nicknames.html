@@ -3,6 +3,6 @@
 {% block content %}
     <h2>Nicknames of {{ author }}</h2>
     {% for row in data %}
-        <p>{{ row }}</p>
+        <p>{{ row[0] }}</p>
     {% endfor %}
 {% endblock %}
