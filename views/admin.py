@@ -117,7 +117,10 @@ def admin_nickname(author_id):
             WHERE a.id = %s
             """, (author_id,))
             nicknames = cursor.fetchall()
-            cursor.execute("SELECT CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name' FROM authors a")
+            cursor.execute("""
+            SELECT CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name' 
+            FROM authors a
+            WHERE a.id = %s""", (author_id,))
             author_name = cursor.fetchone()
             cursor.close()
             return render_template("admin/nicknames.html", author=author_name,nicknames=nicknames)
