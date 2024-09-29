@@ -155,6 +155,21 @@ def admin_authors():
     else:
         return redirect(url_for('home.login'))
 
+@admin.route('/authors/add')
+def admin_authors_add():
+    if "user" in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+        trust_level = cursor.fetchone()[0]
+        cursor.close()
+        if trust_level >= 3:
+
+            return ""
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
+
 @admin.route('/database', methods=['GET', 'POST'])
 def admin_database():
     if request.method == 'GET':
