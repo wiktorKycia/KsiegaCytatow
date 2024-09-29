@@ -167,7 +167,7 @@ def admin_authors_add():
                 return render_template("admin/add_author.html")
             elif request.method == 'POST':
                 first_name = request.form['first_name']
-                middle_name = request.form['middle_name']
+                middle_name = request.form['middle_name'] if request.form['middle_name'] else None
                 last_name = request.form['last_name']
                 cursor = mysql.connection.cursor()
                 cursor.execute("""
