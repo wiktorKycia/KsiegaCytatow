@@ -155,7 +155,7 @@ def admin_authors():
     else:
         return redirect(url_for('home.login'))
 
-@admin.route('/authors/add')
+@admin.route('/authors/add', methods=['GET', 'POST'])
 def admin_authors_add():
     if "user" in session:
         cursor = mysql.connection.cursor()
@@ -163,8 +163,19 @@ def admin_authors_add():
         trust_level = cursor.fetchone()[0]
         cursor.close()
         if trust_level >= 3:
-
-            return ""
+            if request.method == 'GET':
+                return render_template("admin/add_author.html")
+            elif request.method == 'POST':
+                first_name = request.form['first_name']
+                middle_name = request.form['middle_name']
+                last_name = request.form['last_name']
+                cursor = mysql.connection.cursor()
+                cursor.execute("""
+                INSERT INTO authors (first_name, middle_name, last_name) VALUES (%s, %s, %s)
+                """, (first_name, middle_name, last_name))
+                mysql.connection.commit()
+                cursor.close()
+                return redirect(url_for('admin.admin_authors'))
         else:
             abort(403)
     else:
