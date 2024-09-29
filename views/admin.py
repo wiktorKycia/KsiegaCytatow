@@ -83,6 +83,7 @@ def admin_user_detail(user):
                 cursor.execute("""
                 UPDATE users SET name = %s, email = %s, trust_level = %s
                 WHERE name = %s""", (username, email, trust_level, user))
+                mysql.connection.commit()
                 cursor.close()
                 return redirect(url_for('admin.admin_users'))
         else:
