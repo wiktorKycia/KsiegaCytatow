@@ -60,7 +60,7 @@ def admin_users():
     else:
         return redirect(url_for('home.login'))
 
-@admin.route('/users/<user>')
+@admin.route('/users/<user>', methods=['GET', 'POST'])
 def admin_user_detail(user):
     if "user" in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -69,11 +69,22 @@ def admin_user_detail(user):
         cursor.close()
         print(usr)
         if usr['name'] == "admin" and session['user'] == "admin":
-            cursor = mysql.connection.cursor()
-            cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
-            user_data = cursor.fetchone()
-            cursor.close()
-            return render_template("admin/user.html", user=user_data)
+            if request.method == 'GET':
+                cursor = mysql.connection.cursor()
+                cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
+                user_data = cursor.fetchone()
+                cursor.close()
+                return render_template("admin/user.html", user=user_data)
+            elif request.method == 'POST':
+                username = request.form['name']
+                email = request.form['email']
+                trust_level = request.form['trust']
+                cursor = mysql.connection.cursor()
+                cursor.execute("""
+                UPDATE users SET name = %s, email = %s, trust_level = %s
+                WHERE name = %s""", (username, email, trust_level, user))
+                cursor.close()
+                return redirect(url_for('admin.admin_users'))
         else:
             abort(403)
     else:
