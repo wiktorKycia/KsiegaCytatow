@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 {% block title %}{{ user[1] }}{% endblock %}
 {% block content %}
-    {% for col in user %}
-        <p>{{ col }}</p>
-    {% endfor %}
+{#    {% for col in user %}#}
+{#        <p>{{ col }}</p>#}
+{#    {% endfor %}#}
+    <form action="#" method="post">
+        <label for="name">Username: </label>
+        <input id="name" name="name" type="text" value="{{ user[1] }}">
+        <br>
+        <label for="email">Email: </label>
+        <input id="email" name="email" type="email" value="{{ user[2] }}">
+        <br>
+        <label for="trust">Trust level: </label>
+        <input type="number" id="trust" name="trust" min="0" max="3" value="{{ user[4] }}">
+        <input type="submit" value="Zapisz">
+    </form>
 {% endblock %}
