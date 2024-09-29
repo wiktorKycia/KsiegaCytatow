@@ -87,8 +87,7 @@ def admin_nicknames():
         trust_level = cursor.fetchone()[0]
         cursor.close()
         if trust_level >= 3:
-            # TODO: grab the author's id and names, render table with links to author's nicknames
-            return "list of nicknames here, with full access to add, modify, delete and update"
+            return "add /<author_id> to see details about author's nicknames"
         else:
             abort(403)
     else:
