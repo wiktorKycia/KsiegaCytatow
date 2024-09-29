@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}New author{% endblock %}
 {% block content %}
-    <form action="#" method="post"></form>
+    <form action="#" method="post">
+        <label for="first_name">First name:</label>
+        <input type="text" id="first_name" name="first_name" required>
+        <br>
+        <label for="middle_name">Middle name:</label>
+        <input type="text" id="middle_name" name="middle_name">
+        <br>
+        <label for="last_name">Last name:</label>
+        <input type="text" id="last_name" name="last_name">
+        <input type="submit" value="Dodaj">
+    </form>
 {% endblock %}
