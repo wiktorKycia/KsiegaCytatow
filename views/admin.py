@@ -6,12 +6,6 @@ from flask_mysqldb import MySQLdb
 # Parent route
 admin = Blueprint('admin', __name__)
 
-# To all routes in admin:
-# TODO: when admin is not logged in redirect to login (or admin)
-
-# TODO: To routes: /quotes, /authors, /nicknames -> make html templates for those
-# TODO: to routes: /quotes, /authors, /nicknames, /users/ -> only user of trust_level of 3 can see these
-
 # Routes
 @admin.route('/')
 def admin_home_page():
