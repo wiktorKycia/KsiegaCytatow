@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Add nick to {{ author }}{% endblock %}
+{% block content %}
+    <h1>Add nick to {{ author }}: </h1>
+    <form action="#" method="post">
+        <label for="nick">Nick: </label>
+        <input type="text" id="nick" name="nick" required>
+        <label for="author">Select author</label>
+        <select name="author" id="author">
+            {% for opt in authors %}
+                <option value="{{ opt.get("id") }}">{{ opt.get("author_name") }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Dodaj">
+    </form>
+{% endblock %}

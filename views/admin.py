@@ -135,6 +135,28 @@ def admin_nickname(author_id):
     else:
         return redirect(url_for('home.login'))
 
+@admin.route('/nicknames/<author_id>/add')
+def admin_nickname_add(author_id):
+    if "user" in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+        trust_level = cursor.fetchone()[0]
+        cursor.close()
+        if trust_level >= 3:
+            cursor = mysql.connection.cursor()
+            cursor.execute("""
+            SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name' 
+            FROM authors a
+            WHERE a.id = cast(%s AS int)""", (author_id,))
+            author_name = cursor.fetchone()[0]
+            authors = cursor.fetchall()
+            cursor.close()
+            return render_template("admin/add_nicknames.html", author=author_name, authors=authors)
+        else:
+            abort(403)
+    else:
+        return redirect(url_for('home.login'))
+
 @admin.route('/authors')
 def admin_authors():
     if "user" in session:
