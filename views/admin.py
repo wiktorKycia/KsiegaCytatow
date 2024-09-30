@@ -158,6 +158,26 @@ def admin_nickname_add(author_id):
                 return render_template("admin/add_nicknames.html", author=author_name, authors=authors)
             elif request.method == "POST":
                 nickname = request.form['nick']
+                author_id = request.form['author']
+                cursor = mysql.connection.cursor()
+                cursor.execute("""
+                INSERT INTO nicknames (nick) VALUES (%s)
+                """, (nickname, ))
+                mysql.connection.commit()
+                cursor.execute("""
+                SELECT id
+                FROM nicknames
+                WHERE nick = %s
+                ORDER BY id DESC
+                LIMIT 1
+                """)
+                nick_id = cursor.fetchone()[0]
+                cursor.execute("""
+                INSERT INTO AuthorsNicknames (author_id, nick_id) VALUES (%s, %s)
+                """, (author_id, nick_id))
+                mysql.connection.commit()
+                cursor.close()
+                return redirect(url_for('admin.admin_nickname_add', author_id=author_id))
         else:
             abort(403)
     else:
