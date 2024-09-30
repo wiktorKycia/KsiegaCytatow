@@ -8,7 +8,7 @@
         <label for="author">Select author</label>
         <select name="author" id="author">
             {% for opt in authors %}
-                <option value="{{ opt.get("id") }}">{{ opt.get("author_name") }}</option>
+                <option value="{{ opt[0] }}">{{ opt[1] }}</option>
             {% endfor %}
         </select>
         <input type="submit" value="Dodaj">

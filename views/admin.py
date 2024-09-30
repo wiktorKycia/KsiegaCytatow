@@ -148,7 +148,10 @@ def admin_nickname_add(author_id):
             SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name' 
             FROM authors a
             WHERE a.id = cast(%s AS int)""", (author_id,))
-            author_name = cursor.fetchone()[0]
+            author_name = cursor.fetchone()[1]
+            cursor.execute("""
+            SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name' 
+            FROM authors a""")
             authors = cursor.fetchall()
             cursor.close()
             return render_template("admin/add_nicknames.html", author=author_name, authors=authors)
