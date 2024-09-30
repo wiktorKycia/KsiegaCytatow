@@ -173,7 +173,7 @@ def admin_nickname_add(author_id):
                 """, (nickname,))
                 nick_id = cursor.fetchone()[0]
                 cursor.execute("""
-                INSERT INTO AuthorsNicknames (author_id, nick_id) VALUES (%s, %s)
+                INSERT INTO AuthorsNicknames (Authors_id, Nicknames_id) VALUES (%s, %s)
                 """, (author_id, nick_id))
                 mysql.connection.commit()
                 cursor.close()
