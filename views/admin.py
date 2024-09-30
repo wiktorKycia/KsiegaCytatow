@@ -170,7 +170,7 @@ def admin_nickname_add(author_id):
                 WHERE nick = %s
                 ORDER BY id DESC
                 LIMIT 1
-                """)
+                """, (nickname,))
                 nick_id = cursor.fetchone()[0]
                 cursor.execute("""
                 INSERT INTO AuthorsNicknames (author_id, nick_id) VALUES (%s, %s)
