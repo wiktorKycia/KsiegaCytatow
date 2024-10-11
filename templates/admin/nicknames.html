@@ -5,8 +5,9 @@
     {% for row in data %}
         <p>{{ row[0] }}</p>
     {% endfor %}
+    <a href="/admin/nicknames/{{ author[0] }}/add">dodaj</a>
     <div>
         <a href="/admin/nicknames/{{ author[0] - 1 }}">previous</a>
-        <a href="/admin/nicknames{{ author[0] + 1 }}">next</a>
+        <a href="/admin/nicknames/{{ author[0] + 1 }}">next</a>
     </div>
 {% endblock %}
