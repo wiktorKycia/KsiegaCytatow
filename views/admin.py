@@ -27,6 +27,24 @@ def login_required(trust_level_required=1):
         return wrapper
     return decorator
 
+def fetch_columns(table_name):
+    """Helper function to fetch column names for a given table."""
+    cursor = mysql.connection.cursor()
+    cursor.execute(f"DESCRIBE {table_name}")
+    columns = cursor.fetchall()
+    cursor.close()
+    return columns
+
+def fetch_all_users():
+    """Helper function to fetch all users."""
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM users")
+    users = cursor.fetchall()
+    cursor.close()
+    return users
+
+
+
 
 # Routes
 @admin.route('/')
