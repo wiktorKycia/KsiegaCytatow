@@ -60,28 +60,40 @@ def admin_home_page():
             abort(403)
     else:
         return redirect(url_for('home.login'))
+
 @admin.route('/quotes')
+@login_required(trust_level_required=3)
 def admin_quotes():
-    if "user" in session:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
-        trust_level = cursor.fetchone()[0]
-        cursor.close()
-        if trust_level >= 3:
-            cursor = mysql.connection.cursor()
-            cursor.execute("""
-            SELECT q.id, q.content, q.date, q.context, CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name'
-            FROM quotes q
-            LEFT OUTER JOIN authors a ON q.author_id = a.id""")
-            quotes = cursor.fetchall()
-            cursor.execute("DESCRIBE quotes")
-            columns = cursor.fetchall()
-            cursor.close()
-            return render_template("admin/quotes.html", data=quotes, columns=columns)
-        else:
-            abort(403)
-    else:
-        return redirect(url_for('home.login'))
+    # Fetch quotes
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+    SELECT q.id, q.content, q.date, q.context, CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name'
+    FROM quotes q
+    LEFT OUTER JOIN authors a ON q.author_id = a.id""")
+    quotes = cursor.fetchall()
+    cursor.close()
+    columns = fetch_columns("quotes")
+    return render_template("admin/quotes.html", data=quotes, columns=columns)
+    # if "user" in session:
+    #     cursor = mysql.connection.cursor()
+    #     cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+    #     trust_level = cursor.fetchone()[0]
+    #     cursor.close()
+    #     if trust_level >= 3:
+    #         cursor = mysql.connection.cursor()
+    #         cursor.execute("""
+    #         SELECT q.id, q.content, q.date, q.context, CONCAT(a.first_name, a.middle_name, a.last_name) AS 'author name'
+    #         FROM quotes q
+    #         LEFT OUTER JOIN authors a ON q.author_id = a.id""")
+    #         quotes = cursor.fetchall()
+    #         cursor.execute("DESCRIBE quotes")
+    #         columns = cursor.fetchall()
+    #         cursor.close()
+    #         return render_template("admin/quotes.html", data=quotes, columns=columns)
+    #     else:
+    #         abort(403)
+    # else:
+    #     return redirect(url_for('home.login'))
 
 
 @admin.route('/users/')
