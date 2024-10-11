@@ -144,18 +144,20 @@ def admin_user_detail(user):
         return redirect(url_for('home.login'))
 
 @admin.route('/nicknames')
+@login_required(trust_level_required=3)
 def admin_nicknames():
-    if "user" in session:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
-        trust_level = cursor.fetchone()[0]
-        cursor.close()
-        if trust_level >= 3:
-            return "add /author_id to see details about author's nicknames"
-        else:
-            abort(403)
-    else:
-        return redirect(url_for('home.login'))
+    return "add /author_id to see details about author's nicknames"
+    # if "user" in session:
+    #     cursor = mysql.connection.cursor()
+    #     cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+    #     trust_level = cursor.fetchone()[0]
+    #     cursor.close()
+    #     if trust_level >= 3:
+    #         return "add /author_id to see details about author's nicknames"
+    #     else:
+    #         abort(403)
+    # else:
+    #     return redirect(url_for('home.login'))
 
 @admin.route('/nicknames/<author_id>')
 def admin_nickname(author_id):
