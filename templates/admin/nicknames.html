@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% block title %}{{ author }}{% endblock %}
+{% block title %}{{ author[1] }}{% endblock %}
 {% block content %}
-    <h2>Nicknames of {{ author }}</h2>
+    <h2>Nicknames of {{ author[1] }}</h2>
     {% for row in data %}
         <p>{{ row[0] }}</p>
     {% endfor %}
