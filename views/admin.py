@@ -99,7 +99,7 @@ def admin_nicknames():
         trust_level = cursor.fetchone()[0]
         cursor.close()
         if trust_level >= 3:
-            return "add /<author_id> to see details about author's nicknames"
+            return "add /author_id to see details about author's nicknames"
         else:
             abort(403)
     else:
