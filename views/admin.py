@@ -2,9 +2,31 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session
 from db import mysql
 from flask_mysqldb import MySQLdb
+from functools import wraps
 
 # Parent route
 admin = Blueprint('admin', __name__)
+
+# Login required decorator
+def login_required(trust_level_required=1):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if "user" not in session:
+                return redirect(url_for("home.login"))
+            else:
+                # Query user trust level
+                cursor = mysql.connection.cursor()
+                cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+                user_trust_level = cursor.fetchone()[0]
+                cursor.close()
+
+                if user_trust_level < trust_level_required:
+                    abort(403)  # Forbidden if the user does not meet the trust level requirement
+                return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
 
 # Routes
 @admin.route('/')
