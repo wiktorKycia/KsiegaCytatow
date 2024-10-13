@@ -17,19 +17,23 @@ def login_required(trust_level_required=1, admin_only=False):
             else:
                 user = session['user']
 
-                # Allow admins bypass trust level checks
-                if admin_only and user == "admin":
+
+                if admin_only:
+                    if user == "admin":
+                        return func(*args, **kwargs)
+                    else:
+                        abort(403)
+                else:
+
+                    cursor = mysql.connection.cursor()
+                    cursor.execute("SELECT trust_level FROM users WHERE name = %s", (user,))
+                    user_trust_level = cursor.fetchone()[0]
+                    cursor.close()
+
+                    if user_trust_level < trust_level_required:
+                        abort(403)  # Forbidden if the user does not meet the trust level requirement
+
                     return func(*args, **kwargs)
-
-                cursor = mysql.connection.cursor()
-                cursor.execute("SELECT trust_level FROM users WHERE name = %s", (user,))
-                user_trust_level = cursor.fetchone()[0]
-                cursor.close()
-
-                if user_trust_level < trust_level_required:
-                    abort(403)  # Forbidden if the user does not meet the trust level requirement
-
-                return func(*args, **kwargs)
         return wrapper
     return decorator
 
