@@ -1,0 +1,7 @@
+{% set table_name = "Authors" %}
+{% extends 'admin/table.html' %}
+{% block content %}
+	{{ super() }}
+    <a href="/admin/">Panel admina</a>
+    <a href="/admin/authors/add">dodaj</a>
+{% endblock %}
