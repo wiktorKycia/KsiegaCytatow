@@ -8,24 +8,31 @@ from functools import wraps
 admin = Blueprint('admin', __name__)
 
 # Login required decorator
-def login_required(trust_level_required=1):
+def login_required(trust_level_required=1, admin_only=False):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if "user" not in session:
                 return redirect(url_for("home.login"))
             else:
-                # Query user trust level
+                user = session['user']
+
+                # Allow admins bypass trust level checks
+                if admin_only and user == "admin":
+                    return func(*args, **kwargs)
+
                 cursor = mysql.connection.cursor()
-                cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+                cursor.execute("SELECT trust_level FROM users WHERE name = %s", (user,))
                 user_trust_level = cursor.fetchone()[0]
                 cursor.close()
 
                 if user_trust_level < trust_level_required:
                     abort(403)  # Forbidden if the user does not meet the trust level requirement
+
                 return func(*args, **kwargs)
         return wrapper
     return decorator
+
 
 def fetch_columns(table_name):
     """Helper function to fetch column names for a given table."""
