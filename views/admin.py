@@ -200,34 +200,52 @@ def admin_nicknames():
     #     return redirect(url_for('home.login'))
 
 @admin.route('/nicknames/<author_id>')
+@login_required(trust_level_required=3)
 def admin_nickname(author_id):
-    if "user" in session:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
-        trust_level = cursor.fetchone()[0]
-        cursor.close()
-        if trust_level >= 3:
-            cursor = mysql.connection.cursor()
-            cursor.execute("""
-            SELECT nicknames.nick
-            FROM 
-                authors a
-                LEFT JOIN authorsnicknames on a.id = authorsnicknames.Authors_id
-                RIGHT JOIN nicknames on nicknames.id = authorsnicknames.Nicknames_id
-            WHERE a.id = cast(%s AS int)
-            """, (author_id,))
-            nicknames = cursor.fetchall()
-            cursor.execute("""
-            SELECT a.id, CONCAT(a.first_name, ' ', a.last_name) AS 'author name' 
-            FROM authors a
-            WHERE a.id = cast(%s AS int)""", (author_id,))
-            author = cursor.fetchone()
-            cursor.close()
-            return render_template("admin/nicknames.html", author=author, data=nicknames)
-        else:
-            abort(403)
-    else:
-        return redirect(url_for('home.login'))
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+    SELECT nicknames.nick
+    FROM 
+        authors a
+        LEFT JOIN authorsnicknames on a.id = authorsnicknames.Authors_id
+        RIGHT JOIN nicknames on nicknames.id = authorsnicknames.Nicknames_id
+    WHERE a.id = cast(%s AS int)
+    """, (author_id,))
+    nicknames = cursor.fetchall()
+    cursor.execute("""
+    SELECT a.id, CONCAT(a.first_name, ' ', a.last_name) AS 'author name' 
+    FROM authors a
+    WHERE a.id = cast(%s AS int)""", (author_id,))
+    author = cursor.fetchone()
+    cursor.close()
+    return render_template("admin/nicknames.html", author=author, data=nicknames)
+    # if "user" in session:
+    #     cursor = mysql.connection.cursor()
+    #     cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+    #     trust_level = cursor.fetchone()[0]
+    #     cursor.close()
+    #     if trust_level >= 3:
+    #         cursor = mysql.connection.cursor()
+    #         cursor.execute("""
+    #         SELECT nicknames.nick
+    #         FROM
+    #             authors a
+    #             LEFT JOIN authorsnicknames on a.id = authorsnicknames.Authors_id
+    #             RIGHT JOIN nicknames on nicknames.id = authorsnicknames.Nicknames_id
+    #         WHERE a.id = cast(%s AS int)
+    #         """, (author_id,))
+    #         nicknames = cursor.fetchall()
+    #         cursor.execute("""
+    #         SELECT a.id, CONCAT(a.first_name, ' ', a.last_name) AS 'author name'
+    #         FROM authors a
+    #         WHERE a.id = cast(%s AS int)""", (author_id,))
+    #         author = cursor.fetchone()
+    #         cursor.close()
+    #         return render_template("admin/nicknames.html", author=author, data=nicknames)
+    #     else:
+    #         abort(403)
+    # else:
+    #     return redirect(url_for('home.login'))
 
 @admin.route('/nicknames/<author_id>/add', methods=['GET', 'POST'])
 def admin_nickname_add(author_id):
