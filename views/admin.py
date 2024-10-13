@@ -12,26 +12,30 @@ def login_required(trust_level_required=1, admin_only=False):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            # if the user is not logged in, return him to login page
             if "user" not in session:
                 return redirect(url_for("home.login"))
             else:
+                # fetch the user's name
                 user = session['user']
 
-
+                # Only admin can see this page
                 if admin_only:
                     if user == "admin":
                         return func(*args, **kwargs)
                     else:
                         abort(403)
+                # The page is available for others
                 else:
-
+                    # fetch the user's trust level
                     cursor = mysql.connection.cursor()
                     cursor.execute("SELECT trust_level FROM users WHERE name = %s", (user,))
                     user_trust_level = cursor.fetchone()[0]
                     cursor.close()
 
+                    # users under required trust level cannot see this page
                     if user_trust_level < trust_level_required:
-                        abort(403)  # Forbidden if the user does not meet the trust level requirement
+                        abort(403)
 
                     return func(*args, **kwargs)
         return wrapper
