@@ -333,24 +333,33 @@ def admin_nickname_add(author_id):
     #     return redirect(url_for('home.login'))
 
 @admin.route('/authors')
+@login_required(trust_level_required=3)
 def admin_authors():
-    if "user" in session:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
-        trust_level = cursor.fetchone()[0]
-        cursor.close()
-        if trust_level >= 3:
-            cursor = mysql.connection.cursor()
-            cursor.execute("SELECT * FROM authors")
-            authors = cursor.fetchall()
-            cursor.execute("DESCRIBE authors")
-            columns = cursor.fetchall()
-            cursor.close()
-            return render_template("admin/authors.html", data=authors, columns=columns)
-        else:
-            abort(403)
-    else:
-        return redirect(url_for('home.login'))
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM authors")
+    authors = cursor.fetchall()
+    cursor.execute("DESCRIBE authors")
+    columns = cursor.fetchall()
+    cursor.close()
+    return render_template("admin/authors.html", data=authors, columns=columns)
+
+    # if "user" in session:
+    #     cursor = mysql.connection.cursor()
+    #     cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+    #     trust_level = cursor.fetchone()[0]
+    #     cursor.close()
+    #     if trust_level >= 3:
+    #         cursor = mysql.connection.cursor()
+    #         cursor.execute("SELECT * FROM authors")
+    #         authors = cursor.fetchall()
+    #         cursor.execute("DESCRIBE authors")
+    #         columns = cursor.fetchall()
+    #         cursor.close()
+    #         return render_template("admin/authors.html", data=authors, columns=columns)
+    #     else:
+    #         abort(403)
+    # else:
+    #     return redirect(url_for('home.login'))
 
 @admin.route('/authors/add', methods=['GET', 'POST'])
 def admin_authors_add():
