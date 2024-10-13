@@ -63,18 +63,20 @@ def fetch_all_users():
 
 # Routes
 @admin.route('/')
+@login_required(trust_level_required=3)
 def admin_home_page():
-    if "user" in session:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
-        trust_level = cursor.fetchone()[0]
-        cursor.close()
-        if trust_level >= 3:
-            return render_template('admin/index.html')
-        else:
-            abort(403)
-    else:
-        return redirect(url_for('home.login'))
+    return render_template('admin/index.html')
+    # if "user" in session:
+    #     cursor = mysql.connection.cursor()
+    #     cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+    #     trust_level = cursor.fetchone()[0]
+    #     cursor.close()
+    #     if trust_level >= 3:
+    #         return render_template('admin/index.html')
+    #     else:
+    #         abort(403)
+    # else:
+    #     return redirect(url_for('home.login'))
 
 @admin.route('/quotes')
 @login_required(trust_level_required=3)
