@@ -114,20 +114,24 @@ def admin_quotes():
 
 
 @admin.route('/users/')
+@login_required(admin_only=True)
 def admin_users():
-    if "user" in session:
-        if session['user'] == "admin":
-            cursor = mysql.connection.cursor()
-            cursor.execute('SELECT * FROM users')
-            users = cursor.fetchall()
-            cursor.execute('DESCRIBE users')
-            columns = cursor.fetchall()
-            cursor.close()
-            return render_template("admin/users.html", data=users, columns=columns)
-        else:
-            abort(403)
-    else:
-        return redirect(url_for('home.login'))
+    users = fetch_all_users()
+    columns = fetch_columns("users")
+    return render_template("admin/users.html", data=users, columns=columns)
+    # if "user" in session:
+    #     if session['user'] == "admin":
+    #         cursor = mysql.connection.cursor()
+    #         cursor.execute('SELECT * FROM users')
+    #         users = cursor.fetchall()
+    #         cursor.execute('DESCRIBE users')
+    #         columns = cursor.fetchall()
+    #         cursor.close()
+    #         return render_template("admin/users.html", data=users, columns=columns)
+    #     else:
+    #         abort(403)
+    # else:
+    #     return redirect(url_for('home.login'))
 
 @admin.route('/users/<user>', methods=['GET', 'POST'])
 def admin_user_detail(user):
