@@ -403,15 +403,10 @@ def admin_authors_add():
     #     return redirect(url_for('home.login'))
 
 @admin.route('/database', methods=['GET', 'POST'])
+@login_required(admin_only=True)
 def admin_database():
     if request.method == 'GET':
-        if "user" in session:
-            if session["user"] == "admin":
-                return render_template("admin/database.html", data=None, query_value="")
-            else:
-                abort(403)
-        else:
-            return redirect(url_for('home.login'))
+        return render_template("admin/database.html", data=None, query_value="")
     elif request.method == 'POST':
         cursor = mysql.connection.cursor()
         cursor.execute(request.form['query'])
