@@ -248,52 +248,89 @@ def admin_nickname(author_id):
     #     return redirect(url_for('home.login'))
 
 @admin.route('/nicknames/<author_id>/add', methods=['GET', 'POST'])
+@login_required(trust_level_required=3)
 def admin_nickname_add(author_id):
-    if "user" in session:
+    if request.method == "GET":
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
-        trust_level = cursor.fetchone()[0]
+        cursor.execute("""
+        SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name' 
+        FROM authors a
+        WHERE a.id = cast(%s AS int)""", (author_id,))
+        author = cursor.fetchone()
+        cursor.execute("""
+        SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name' 
+        FROM authors a""")
+        authors = cursor.fetchall()
         cursor.close()
-        if trust_level >= 3:
-            if request.method == "GET":
-                cursor = mysql.connection.cursor()
-                cursor.execute("""
-                SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name' 
-                FROM authors a
-                WHERE a.id = cast(%s AS int)""", (author_id,))
-                author = cursor.fetchone()
-                cursor.execute("""
-                SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name' 
-                FROM authors a""")
-                authors = cursor.fetchall()
-                cursor.close()
-                return render_template("admin/add_nicknames.html", author=author, authors=authors)
-            elif request.method == "POST":
-                nickname = request.form['nick']
-                author_id = request.form['author']
-                cursor = mysql.connection.cursor()
-                cursor.execute("""
-                INSERT INTO nicknames (nick) VALUES (%s)
-                """, (nickname, ))
-                mysql.connection.commit()
-                cursor.execute("""
-                SELECT id
-                FROM nicknames
-                WHERE nick = %s
-                ORDER BY id DESC
-                LIMIT 1
-                """, (nickname,))
-                nick_id = cursor.fetchone()[0]
-                cursor.execute("""
-                INSERT INTO AuthorsNicknames (Authors_id, Nicknames_id) VALUES (%s, %s)
-                """, (author_id, nick_id))
-                mysql.connection.commit()
-                cursor.close()
-                return redirect(url_for('admin.admin_nickname_add', author_id=author_id))
-        else:
-            abort(403)
-    else:
-        return redirect(url_for('home.login'))
+        return render_template("admin/add_nicknames.html", author=author, authors=authors)
+    elif request.method == "POST":
+        nickname = request.form['nick']
+        author_id = request.form['author']
+        cursor = mysql.connection.cursor()
+        cursor.execute("""
+        INSERT INTO nicknames (nick) VALUES (%s)
+        """, (nickname,))
+        mysql.connection.commit()
+        cursor.execute("""
+        SELECT id
+        FROM nicknames
+        WHERE nick = %s
+        ORDER BY id DESC
+        LIMIT 1
+        """, (nickname,))
+        nick_id = cursor.fetchone()[0]
+        cursor.execute("""
+        INSERT INTO AuthorsNicknames (Authors_id, Nicknames_id) VALUES (%s, %s)
+        """, (author_id, nick_id))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('admin.admin_nickname_add', author_id=author_id))
+
+    # if "user" in session:
+    #     cursor = mysql.connection.cursor()
+    #     cursor.execute("SELECT trust_level FROM users WHERE name = %s", (session['user'],))
+    #     trust_level = cursor.fetchone()[0]
+    #     cursor.close()
+    #     if trust_level >= 3:
+    #         if request.method == "GET":
+    #             cursor = mysql.connection.cursor()
+    #             cursor.execute("""
+    #             SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name'
+    #             FROM authors a
+    #             WHERE a.id = cast(%s AS int)""", (author_id,))
+    #             author = cursor.fetchone()
+    #             cursor.execute("""
+    #             SELECT a.id AS 'id', CONCAT(a.first_name, ' ', a.last_name) AS 'author_name'
+    #             FROM authors a""")
+    #             authors = cursor.fetchall()
+    #             cursor.close()
+    #             return render_template("admin/add_nicknames.html", author=author, authors=authors)
+    #         elif request.method == "POST":
+    #             nickname = request.form['nick']
+    #             author_id = request.form['author']
+    #             cursor = mysql.connection.cursor()
+    #             cursor.execute("""
+    #             INSERT INTO nicknames (nick) VALUES (%s)
+    #             """, (nickname, ))
+    #             mysql.connection.commit()
+    #             cursor.execute("""
+    #             SELECT id
+    #             FROM nicknames
+    #             WHERE nick = %s
+    #             ORDER BY id DESC
+    #             LIMIT 1
+    #             """, (nickname,))
+    #             nick_id = cursor.fetchone()[0]
+    #             cursor.execute("""
+    #             INSERT INTO AuthorsNicknames (Authors_id, Nicknames_id) VALUES (%s, %s)
+    #             """, (author_id, nick_id))
+    #             mysql.connection.commit()
+    #             cursor.close()
+    #             return redirect(url_for('admin.admin_nickname_add', author_id=author_id))
+    #     else:
+    #         abort(403)
+    # else:
+    #     return redirect(url_for('home.login'))
 
 @admin.route('/authors')
 def admin_authors():
