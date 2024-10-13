@@ -134,35 +134,54 @@ def admin_users():
     #     return redirect(url_for('home.login'))
 
 @admin.route('/users/<user>', methods=['GET', 'POST'])
+@login_required(admin_only=True)
 def admin_user_detail(user):
-    if "user" in session:
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM users WHERE name = %s', (session['user'],))
-        usr = cursor.fetchone()
+    if request.method == 'GET':
+        cursor = mysql.connection.cursor()
+        cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
+        user_data = cursor.fetchone()
         cursor.close()
-        print(usr)
-        if usr['name'] == "admin" and session['user'] == "admin":
-            if request.method == 'GET':
-                cursor = mysql.connection.cursor()
-                cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
-                user_data = cursor.fetchone()
-                cursor.close()
-                return render_template("admin/user.html", user=user_data)
-            elif request.method == 'POST':
-                username = request.form['name']
-                email = request.form['email']
-                trust_level = request.form['trust']
-                cursor = mysql.connection.cursor()
-                cursor.execute("""
-                UPDATE users SET name = %s, email = %s, trust_level = %s
-                WHERE name = %s""", (username, email, trust_level, user))
-                mysql.connection.commit()
-                cursor.close()
-                return redirect(url_for('admin.admin_users'))
-        else:
-            abort(403)
-    else:
-        return redirect(url_for('home.login'))
+        return render_template("admin/user.html", user=user_data)
+    elif request.method == 'POST':
+        username = request.form['name']
+        email = request.form['email']
+        trust_level = request.form['trust']
+        cursor = mysql.connection.cursor()
+        cursor.execute("""
+        UPDATE users SET name = %s, email = %s, trust_level = %s
+        WHERE name = %s""", (username, email, trust_level, user))
+        mysql.connection.commit()
+        cursor.close()
+        return redirect(url_for('admin.admin_users'))
+
+    # if "user" in session:
+    #     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    #     cursor.execute('SELECT * FROM users WHERE name = %s', (session['user'],))
+    #     usr = cursor.fetchone()
+    #     cursor.close()
+    #     print(usr)
+    #     if usr['name'] == "admin" and session['user'] == "admin":
+    #         if request.method == 'GET':
+    #             cursor = mysql.connection.cursor()
+    #             cursor.execute('''SELECT * FROM users WHERE name = %s''', (user,))
+    #             user_data = cursor.fetchone()
+    #             cursor.close()
+    #             return render_template("admin/user.html", user=user_data)
+    #         elif request.method == 'POST':
+    #             username = request.form['name']
+    #             email = request.form['email']
+    #             trust_level = request.form['trust']
+    #             cursor = mysql.connection.cursor()
+    #             cursor.execute("""
+    #             UPDATE users SET name = %s, email = %s, trust_level = %s
+    #             WHERE name = %s""", (username, email, trust_level, user))
+    #             mysql.connection.commit()
+    #             cursor.close()
+    #             return redirect(url_for('admin.admin_users'))
+    #     else:
+    #         abort(403)
+    # else:
+    #     return redirect(url_for('home.login'))
 
 @admin.route('/nicknames')
 @login_required(trust_level_required=3)
