@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}{{ author[1] }}{% endblock %}
+{% block content %}
+    <h2>Nicknames of {{ author[1] }}</h2>
+    {% for row in data %}
+        <p>{{ row[0] }}</p>
+    {% endfor %}
+    <a href="/admin/nicknames/{{ author[0] }}/add">dodaj</a>
+    <div>
+        <a href="/admin/nicknames/{{ author[0] - 1 }}">previous</a>
+        <a href="/admin/nicknames/{{ author[0] + 1 }}">next</a>
+    </div>
+{% endblock %}
