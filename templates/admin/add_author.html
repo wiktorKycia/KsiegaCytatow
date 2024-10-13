@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}New author{% endblock %}
 {% block content %}
-    <form action="#" method="post">
+    <form action="#" method="post" autocomplete="off">
         <label for="first_name">First name:</label>
-        <input type="text" id="first_name" name="first_name" autocomplete="off" required>
+        <input type="text" id="first_name" name="first_name" autocomplete="new-first-name" required>
         <br>
         <label for="middle_name">Middle name:</label>
-        <input type="text" id="middle_name" autocomplete="off" name="middle_name">
+        <input type="text" id="middle_name" name="middle_name" autocomplete="a">
         <br>
         <label for="last_name">Last name:</label>
-        <input type="text" id="last_name" autocomplete="off" name="last_name" required>
+        <input type="text" id="last_name" name="last_name" autocomplete="new-last-name" required>
         <input type="submit" value="Dodaj">
     </form>
 {% endblock %}
