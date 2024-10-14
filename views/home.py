@@ -5,6 +5,13 @@ from db import mysql
 # Parent route
 home = Blueprint('home', __name__)
 
+# TODO: quick quote add -> admin or moderator has to approve it
+# TODO: 3 most liked quotes before register
+# TODO: IsUserZSKStudent test in register form
+# TODO: add quote
+# TODO: search quotes (searchbox)
+# TODO: liking quotes
+
 # Routes
 @home.route('/')
 def homepage():
