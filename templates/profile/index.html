@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}{{ username }}{% endblock %}
+{% block content %}
+    <h1>Hello {{ username }}!</h1>
+    <a href="/home/logout">logout</a>
+    {% if username == 'admin' %}
+        <a href="/admin/">admin panel</a>
+    {% endif %}
+{% endblock %}
