@@ -52,14 +52,6 @@ def login():
             session['user'] = user[0]
             return redirect(url_for('profile.user_profile', user_url_slug=user[0]))
 
-@home.route('/user')
-def userhomepage():
-    # the user is logged in, so we allow him to view his page
-    if "user" in session:
-        return render_template('home/user.html', username=session['user'])
-    else:
-        # the user is not logged in, so we redirect him back to login
-        return redirect(url_for('home.login'))
 
 @home.route('/logout')
 def logout():
