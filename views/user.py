@@ -38,7 +38,7 @@ def user_profile():
     if "user" in session:
         if g.profile_owner.get('name') == session['user']:
             user = g.profile_owner
-            return render_template("home/user.html", username=user)
+            return render_template("profile/index.html", username=user['name'])
         else:
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
