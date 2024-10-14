@@ -27,7 +27,6 @@ def get_profile_owner(endpoint, values):
         return redirect(url_for("home.login"))
 
 
-# TODO: create a folder for profile blueprint in templates
 # TODO: enable user to change password
 # TODO: email verification
 # TODO: change nickname preferences

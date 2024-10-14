@@ -27,7 +27,7 @@ def login():
     if request.method == 'GET':
         # if the user is already logged in, push him back to his user page
         if "user" in session:
-            return redirect(url_for('home.userhomepage'))
+            return redirect(url_for('profile.user_profile', user_url_slug=session['user']))
         return render_template('home/login.html')
     # user fills out the form and clicks submit
     elif request.method == 'POST':
@@ -50,7 +50,7 @@ def login():
             session.permanent = True
             user = users[0]
             session['user'] = user[0]
-            return redirect(url_for('home.userhomepage'))
+            return redirect(url_for('profile.user_profile', user_url_slug=user[0]))
 
 @home.route('/user')
 def userhomepage():
