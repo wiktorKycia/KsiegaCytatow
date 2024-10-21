@@ -53,7 +53,7 @@ app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(profile, url_prefix='/profile/<user_url_slug>')
 
-
+from itsdangerous import URLSafeTimedSerializer
 
 def generate_verification_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
