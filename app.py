@@ -9,6 +9,11 @@ from db import mysql
 from secrets import token_hex
 from datetime import timedelta
 
+import os
+from flask_mail import Mail
+from dotenv import load_dotenv
+
+load_dotenv()
 # Main app
 app = Flask(__name__)
 
@@ -19,6 +24,20 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'ksiegacytatow'
 
 mysql.init_app(app)
+
+# Mail config
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS') == 'True'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
+# Using secret key and security salt for token generation
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
+
+mail = Mail(app)
 
 # no need for db.py
 # mysql = MySQL(app)
