@@ -104,7 +104,7 @@ def verify_email(token):
     # flash('Your account has been verified!', 'success')
     return redirect(url_for('home.login'))
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET','POST'])
 def register():
     email = request.form['email']
     # Other registration logic...
