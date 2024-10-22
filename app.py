@@ -85,6 +85,26 @@ def send_verification_email(user_email):
 def index():
     return redirect(url_for('home.homepage'))
 
+@app.route('/verify/<token>')
+def verify_email(token):
+    try:
+        email = verify_token(token)
+    except:
+        print('The verification link is invalid or has expired.')
+        # flash('The verification link is invalid or has expired.', 'danger')
+        return redirect(url_for('home'))
+
+    # Update the user's trust level in the database
+    cursor = mysql.connection.cursor()
+    cursor.execute("UPDATE users SET trust_level = 2 WHERE email = %s", (email,))
+    mysql.connection.commit()
+    cursor.close()
+
+    print('Your account has been verified!')
+    # flash('Your account has been verified!', 'success')
+    return redirect(url_for('login'))
+
+
 # Run
 if __name__ == '__main__':
     with app.app_context():
