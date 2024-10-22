@@ -10,7 +10,7 @@ from secrets import token_hex
 from datetime import timedelta
 
 import os
-from flask_mail import Mail
+from flask_mail import Mail, Message
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -70,6 +70,15 @@ def verify_token(token, expiration=3600):
         return False
     return email
 
+def send_verification_email(user_email):
+    token = generate_verification_token(user_email)
+    verification_url = url_for('verify_email', token=token, _external=True)
+    subject = "Please verify your email"
+    body = f"Click the link to verify your email: {verification_url}"
+
+    # Send the email
+    msg = Message(subject=subject, recipients=[user_email], body=body)
+    mail.send(msg)
 
 # Main route
 @app.route('/')
