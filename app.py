@@ -1,5 +1,5 @@
 # Imports
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 
 from views import user
 from views.home import home
@@ -104,7 +104,19 @@ def verify_email(token):
     # flash('Your account has been verified!', 'success')
     return redirect(url_for('home.login'))
 
+@app.route('/register', methods=['GET','POST'])
+def register():
+    if request.method == 'GET':
+        return render_template("register.html")
+    else:
 
+        email = request.form['email']
+        # Other registration logic...
+
+        send_verification_email(email)
+        print('A verification email has been sent to your inbox.')
+        # flash('A verification email has been sent to your inbox.', 'info')
+        return redirect(url_for('home.login'))
 
 
 
