@@ -1,7 +1,7 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session
 from db import mysql
-
+from app import send_verification_email
 # Parent route
 home = Blueprint('home', __name__)
 
@@ -57,4 +57,18 @@ def login():
 def logout():
     session.pop("user", None)
     return redirect(url_for("home.login"))
+
+@home.route('/register', methods=['GET','POST'])
+def register():
+    if request.method == 'GET':
+        return render_template("register.html")
+    else:
+
+        email = request.form['email']
+        # Other registration logic...
+
+        send_verification_email(email)
+        print('A verification email has been sent to your inbox.')
+        # flash('A verification email has been sent to your inbox.', 'info')
+        return redirect(url_for('home.login'))
 
