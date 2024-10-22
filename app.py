@@ -92,7 +92,7 @@ def verify_email(token):
     except:
         print('The verification link is invalid or has expired.')
         # flash('The verification link is invalid or has expired.', 'danger')
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
 
     # Update the user's trust level in the database
     cursor = mysql.connection.cursor()
@@ -102,7 +102,18 @@ def verify_email(token):
 
     print('Your account has been verified!')
     # flash('Your account has been verified!', 'success')
-    return redirect(url_for('login'))
+    return redirect(url_for('home.login'))
+
+@app.route('/register', methods=['POST'])
+def register():
+    email = request.form['email']
+    # Other registration logic...
+
+    send_verification_email(email)
+    print('A verification email has been sent to your inbox.')
+    # flash('A verification email has been sent to your inbox.', 'info')
+    return redirect(url_for('home.login'))
+
 
 
 # Run
