@@ -1,5 +1,5 @@
 # Imports
-from flask import Blueprint, render_template, request, redirect, url_for, abort, session
+from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
 from db import mysql
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
@@ -14,15 +14,15 @@ home = Blueprint('home', __name__)
 # TODO: liking quotes
 
 def generate_verification_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=current_app.config['SECURITY_PASSWORD_SALT'])
 
 def verify_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
     try:
         email = serializer.loads(
             token,
-            salt=app.config['SECURITY_PASSWORD_SALT'],
+            salt=current_app.config['SECURITY_PASSWORD_SALT'],
             max_age=expiration  # Token expires after 1 hour
         )
     except:
