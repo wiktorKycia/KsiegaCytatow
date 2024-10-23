@@ -86,9 +86,11 @@ def logout():
     return redirect(url_for("home.login"))
 
 
-@home.route('/register/<email>', methods=['GET'])
-def register(email):
+@home.route('/register/', methods=['GET'])
+def register():
+    email = session.get('user_email')
     send_verification_email(email)
+    session.pop('user_email', None)
     return "Check your email inbox for a verification link."
 
 
