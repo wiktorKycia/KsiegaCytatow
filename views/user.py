@@ -40,10 +40,12 @@ def user_profile():
             user = g.profile_owner
 
             cursor = mysql.connection.cursor()
-            cursor.execute('SELECT trust_level FROM users WHERE name = %s', (user,))
+            cursor.execute('SELECT trust_level, email FROM users WHERE name = %s', (user,))
             trust = cursor.fetchone()[0]
+            email = cursor.fetchone()[1]
             cursor.close()
             if trust < 1:
+                session['user_email'] = email
                 return render_template("profile/index.html", username=user['name'], canverify=True)
 
             return render_template("profile/index.html", username=user['name'], canverify=True)
