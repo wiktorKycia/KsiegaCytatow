@@ -1,7 +1,6 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session
 from db import mysql
-
 # Parent route
 home = Blueprint('home', __name__)
 
@@ -57,4 +56,6 @@ def login():
 def logout():
     session.pop("user", None)
     return redirect(url_for("home.login"))
+
+
 
