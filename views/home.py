@@ -1,6 +1,7 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session
 from db import mysql
+from itsdangerous import URLSafeTimedSerializer
 # Parent route
 home = Blueprint('home', __name__)
 
