@@ -1,6 +1,6 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
-from config import mysql
+from config import mysql, mail
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 # Parent route
@@ -31,7 +31,7 @@ def verify_token(token, expiration=3600):
 
 def send_verification_email(user_email):
     token = generate_verification_token(user_email)
-    verification_url = url_for('verify_email', token=token, _external=True)
+    verification_url = url_for('home.verify_email', token=token, _external=True)
     subject = "Please verify your email"
     body = f"Click the link to verify your email: {verification_url}"
 
