@@ -53,31 +53,7 @@ app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(profile, url_prefix='/profile/<user_url_slug>')
 
 from itsdangerous import URLSafeTimedSerializer
-def generate_verification_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
-def verify_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    try:
-        email = serializer.loads(
-            token,
-            salt=app.config['SECURITY_PASSWORD_SALT'],
-            max_age=expiration  # Token expires after 1 hour
-        )
-    except:
-        return False
-    return email
-
-def send_verification_email(user_email):
-    token = generate_verification_token(user_email)
-    verification_url = url_for('verify_email', token=token, _external=True)
-    subject = "Please verify your email"
-    body = f"Click the link to verify your email: {verification_url}"
-
-    # Send the email
-    msg = Message(subject=subject, recipients=[user_email], body=body)
-    mail.send(msg)
 
 # Main route
 @app.route('/')
