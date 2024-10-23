@@ -40,9 +40,8 @@ def user_profile():
             user = g.profile_owner
 
             cursor = mysql.connection.cursor()
-            cursor.execute('SELECT trust_level, email FROM users WHERE name = %s', (user,))
-            trust = cursor.fetchone()[0]
-            email = cursor.fetchone()[1]
+            cursor.execute('SELECT trust_level, email FROM users WHERE name = %s', (user['name'],))
+            trust, email = cursor.fetchone()
             cursor.close()
             if trust < 1:
                 session['user_email'] = email
