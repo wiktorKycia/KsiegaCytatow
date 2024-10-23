@@ -38,7 +38,15 @@ def user_profile():
     if "user" in session:
         if g.profile_owner.get('name') == session['user']:
             user = g.profile_owner
-            return render_template("profile/index.html", username=user['name'])
+
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT trust_level FROM users WHERE name = %s', (user,))
+            trust = cursor.fetchone()[0]
+            cursor.close()
+            if trust < 1:
+                return render_template("profile/index.html", username=user['name'], canverify=True)
+
+            return render_template("profile/index.html", username=user['name'], canverify=True)
         else:
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
