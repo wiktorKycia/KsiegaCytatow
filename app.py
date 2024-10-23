@@ -5,12 +5,11 @@ from views import user
 from views.home import home
 from views.admin import admin
 from views.user import profile
-from db import mysql
+from config import mysql, mail
 from secrets import token_hex
 from datetime import timedelta
 
 import os
-from flask_mail import Mail, Message
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -36,9 +35,9 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 # Using security salt for token generation
 app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
 
-mail = Mail(app)
+mail.init_app(app)
 
-# no need for db.py
+# no need for config.py
 # mysql = MySQL(app)
 # app.mysql = mysql  # Make `mysql` accessible via `current_app`
 # then in views: from flask_mysqldb import MySQLdb, current_app
@@ -52,70 +51,17 @@ app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(profile, url_prefix='/profile/<user_url_slug>')
 
-from itsdangerous import URLSafeTimedSerializer
-def generate_verification_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
-def verify_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    try:
-        email = serializer.loads(
-            token,
-            salt=app.config['SECURITY_PASSWORD_SALT'],
-            max_age=expiration  # Token expires after 1 hour
-        )
-    except:
-        return False
-    return email
 
-def send_verification_email(user_email):
-    token = generate_verification_token(user_email)
-    verification_url = url_for('verify_email', token=token, _external=True)
-    subject = "Please verify your email"
-    body = f"Click the link to verify your email: {verification_url}"
-
-    # Send the email
-    msg = Message(subject=subject, recipients=[user_email], body=body)
-    mail.send(msg)
 
 # Main route
 @app.route('/')
 def index():
     return redirect(url_for('home.homepage'))
 
-@app.route('/verify/<token>')
-def verify_email(token):
-    try:
-        email = verify_token(token)
-    except:
-        print('The verification link is invalid or has expired.')
-        # flash('The verification link is invalid or has expired.', 'danger')
-        return redirect(url_for('index'))
 
-    # Update the user's trust level in the database
-    cursor = mysql.connection.cursor()
-    cursor.execute("UPDATE users SET trust_level = 2 WHERE email = %s", (email,))
-    mysql.connection.commit()
-    cursor.close()
 
-    print('Your account has been verified!')
-    # flash('Your account has been verified!', 'success')
-    return redirect(url_for('home.login'))
 
-@app.route('/register', methods=['GET','POST'])
-def register():
-    if request.method == 'GET':
-        return render_template("register.html")
-    else:
-
-        email = request.form['email']
-        # Other registration logic...
-
-        send_verification_email(email)
-        print('A verification email has been sent to your inbox.')
-        # flash('A verification email has been sent to your inbox.', 'info')
-        return redirect(url_for('home.login'))
 
 
 

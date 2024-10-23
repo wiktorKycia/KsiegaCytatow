@@ -1,6 +1,6 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session
-from db import mysql
+from config import mysql
 from flask_mysqldb import MySQLdb
 from functools import wraps
 

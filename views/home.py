@@ -1,6 +1,8 @@
 # Imports
-from flask import Blueprint, render_template, request, redirect, url_for, abort, session
-from db import mysql
+from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
+from config import mysql, mail
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Message
 # Parent route
 home = Blueprint('home', __name__)
 
@@ -10,6 +12,32 @@ home = Blueprint('home', __name__)
 # TODO: add quote
 # TODO: search quotes (searchbox)
 # TODO: liking quotes
+
+def generate_verification_token(email):
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=current_app.config['SECURITY_PASSWORD_SALT'])
+
+def verify_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(
+            token,
+            salt=current_app.config['SECURITY_PASSWORD_SALT'],
+            max_age=expiration  # Token expires after 1 hour
+        )
+    except:
+        return False
+    return email
+
+def send_verification_email(user_email):
+    token = generate_verification_token(user_email)
+    verification_url = url_for('home.verify_email', token=token, _external=True)
+    subject = "Please verify your email"
+    body = f"Click the link to verify your email: {verification_url}"
+
+    # Send the email
+    msg = Message(subject=subject, recipients=[user_email], body=body)
+    mail.send(msg)
 
 # Routes
 @home.route('/')
@@ -58,4 +86,27 @@ def logout():
     return redirect(url_for("home.login"))
 
 
+@home.route('/register/<email>', methods=['GET'])
+def register(email):
+    send_verification_email(email)
+    return "Check your email inbox for a verification link."
 
+
+@home.route('/verify/<token>')
+def verify_email(token):
+    try:
+        email = verify_token(token)
+    except:
+        print('The verification link is invalid or has expired.')
+        # flash('The verification link is invalid or has expired.', 'danger')
+        return redirect(url_for('index'))
+
+    # Update the user's trust level in the database
+    cursor = mysql.connection.cursor()
+    cursor.execute("UPDATE users SET trust_level = 2 WHERE email = %s", (email,))
+    mysql.connection.commit()
+    cursor.close()
+
+    print('Your account has been verified!')
+    # flash('Your account has been verified!', 'success')
+    return redirect(url_for('home.login'))
