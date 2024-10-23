@@ -10,7 +10,7 @@ from secrets import token_hex
 from datetime import timedelta
 
 import os
-from flask_mail import Mail, Message
+from flask_mail import Mail
 from dotenv import load_dotenv
 
 load_dotenv()

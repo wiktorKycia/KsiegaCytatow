@@ -2,6 +2,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session
 from db import mysql
 from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Message
 # Parent route
 home = Blueprint('home', __name__)
 
