@@ -5,12 +5,11 @@ from views import user
 from views.home import home
 from views.admin import admin
 from views.user import profile
-from db import mysql
+from config import mysql, mail
 from secrets import token_hex
 from datetime import timedelta
 
 import os
-from flask_mail import Mail
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -36,9 +35,9 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 # Using security salt for token generation
 app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
 
-mail = Mail(app)
+mail.init_app(app)
 
-# no need for db.py
+# no need for config.py
 # mysql = MySQL(app)
 # app.mysql = mysql  # Make `mysql` accessible via `current_app`
 # then in views: from flask_mysqldb import MySQLdb, current_app

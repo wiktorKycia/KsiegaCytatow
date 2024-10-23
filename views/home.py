@@ -1,6 +1,6 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
-from db import mysql
+from config import mysql
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 # Parent route
