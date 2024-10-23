@@ -53,7 +53,6 @@ app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(profile, url_prefix='/profile/<user_url_slug>')
 
 from itsdangerous import URLSafeTimedSerializer
-# TODO: point 3 of GPT prompt, move some parts to home.py
 def generate_verification_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
