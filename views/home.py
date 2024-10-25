@@ -30,7 +30,6 @@ def verify_token(token, expiration=3600):
     return email
 
 def send_verification_email(user_email):
-    print(user_email)
     token = generate_verification_token(user_email)
     verification_url = url_for('home.verify_email', token=token, _external=True)
     subject = "Please verify your email".encode('utf-8')
@@ -39,7 +38,6 @@ def send_verification_email(user_email):
     # Send the email
     msg = Message(subject=subject.decode('utf-8'), recipients=[user_email], body=body.decode('utf-8'))
     msg.charset = 'utf-8'  # Set the encoding explicitly
-    print(msg)
     mail.send(msg)
 
 # Routes

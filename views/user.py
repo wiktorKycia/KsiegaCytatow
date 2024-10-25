@@ -47,7 +47,7 @@ def user_profile():
                 session['user_email'] = email
                 return render_template("profile/index.html", username=user['name'], canverify=True)
 
-            return render_template("profile/index.html", username=user['name'], canverify=True)
+            return render_template("profile/index.html", username=user['name'], canverify=False)
         else:
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
