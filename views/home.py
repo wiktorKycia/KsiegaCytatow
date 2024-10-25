@@ -32,11 +32,12 @@ def verify_token(token, expiration=3600):
 def send_verification_email(user_email):
     token = generate_verification_token(user_email)
     verification_url = url_for('home.verify_email', token=token, _external=True)
-    subject = "Please verify your email"
-    body = f"Click the link to verify your email: {verification_url}"
+    subject = "Please verify your email".encode('utf-8')
+    body = f"Click the link to verify your email: {verification_url}".encode('utf-8')
 
     # Send the email
-    msg = Message(subject=subject, recipients=[user_email], body=body)
+    msg = Message(subject=subject.decode('utf-8'), recipients=[user_email], body=body.decode('utf-8'))
+    msg.charset = 'utf-8'  # Set the encoding explicitly
     mail.send(msg)
 
 # Routes
@@ -86,9 +87,11 @@ def logout():
     return redirect(url_for("home.login"))
 
 
-@home.route('/register/<email>', methods=['GET'])
-def register(email):
+@home.route('/register/', methods=['GET'])
+def register():
+    email = session.get('user_email')
     send_verification_email(email)
+    session.pop('user_email', None)
     return "Check your email inbox for a verification link."
 
 

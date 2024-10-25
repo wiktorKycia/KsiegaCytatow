@@ -6,4 +6,7 @@
     {% if username == 'admin' %}
         <a href="/admin/">admin panel</a>
     {% endif %}
+    {% if canverify %}
+        <a href="/home/register/">verify your email</a>
+    {% endif %}
 {% endblock %}

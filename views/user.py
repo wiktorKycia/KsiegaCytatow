@@ -28,7 +28,6 @@ def get_profile_owner(endpoint, values):
 
 
 # TODO: enable user to change password
-# TODO: email verification
 # TODO: change nickname preferences
 # TODO: display favourite quotes
 
@@ -38,7 +37,16 @@ def user_profile():
     if "user" in session:
         if g.profile_owner.get('name') == session['user']:
             user = g.profile_owner
-            return render_template("profile/index.html", username=user['name'])
+
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT trust_level, email FROM users WHERE name = %s', (user['name'],))
+            trust, email = cursor.fetchone()
+            cursor.close()
+            if trust < 1:
+                session['user_email'] = email
+                return render_template("profile/index.html", username=user['name'], canverify=True)
+
+            return render_template("profile/index.html", username=user['name'], canverify=False)
         else:
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
