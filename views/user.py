@@ -28,7 +28,6 @@ def get_profile_owner(endpoint, values):
 
 
 # TODO: enable user to change password
-# TODO: email verification
 # TODO: change nickname preferences
 # TODO: display favourite quotes
 
