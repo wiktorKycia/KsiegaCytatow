@@ -66,6 +66,7 @@ def change_password():
                 cursor.execute('UPDATE users SET user_password = %s WHERE name = %s', (password, user['name']))
                 mysql.connection.commit()
                 cursor.close()
+                return redirect(url_for('profile.user_profile', user_url_slug=session['user']), code=302)
 
         else:
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
