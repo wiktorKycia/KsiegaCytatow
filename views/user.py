@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, g
-from config import mysql
+from config import mysql, send_change_password_email
 from flask_mysqldb import MySQLdb
 from werkzeug.security import generate_password_hash, check_password_hash
 profile = Blueprint('profile', __name__)
@@ -51,6 +51,13 @@ def user_profile():
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
         return redirect(url_for("home.login"))
+
+@profile.route('/send_email')
+def send_email():
+    email = session.get('user_email')
+    send_change_password_email(email)
+    session.pop('user_email', None)
+    return "Check your email inbox for a link"
 
 @profile.route('/change_password', methods=['GET', 'POST'])
 def change_password():
