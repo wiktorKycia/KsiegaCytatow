@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, g
 from config import mysql
 from flask_mysqldb import MySQLdb
-
+from werkzeug.security import generate_password_hash, check_password_hash
 profile = Blueprint('profile', __name__)
 
 
@@ -66,6 +66,7 @@ def change_password():
                 if password != password_confirm:
                     return render_template("profile/change_password.html", password_not_match=True)
                 else:
+                    password = generate_password_hash(password)
                     cursor = mysql.connection.cursor()
                     cursor.execute('UPDATE users SET user_password = %s WHERE name = %s', (password, user['name']))
                     mysql.connection.commit()
