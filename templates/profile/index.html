@@ -10,5 +10,5 @@
         <a href="/home/register/">verify your email</a>
     {% endif %}
     <br>
-    <a href="/profile/send_email/">change password</a>
+    <a href={{ url_for("profile.send_email", user_url_slug=username) }}>change password</a>
 {% endblock %}
