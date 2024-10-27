@@ -51,3 +51,27 @@ def user_profile():
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
         return redirect(url_for("home.login"))
+
+@profile.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    if "user" in session:
+        if g.profile_owner.get('name') == session['user']:
+            user = g.profile_owner
+
+            if request.method == 'GET':
+                return render_template("profile/change_password.html", password_not_match=False)
+            elif request.method == 'POST':
+                password = request.form['password']
+                password_confirm = request.form['password2']
+                if password != password_confirm:
+                    return render_template("profile/change_password.html", password_not_match=True)
+                else:
+                    cursor = mysql.connection.cursor()
+                    cursor.execute('UPDATE users SET user_password = %s WHERE name = %s', (password, user['name']))
+                    mysql.connection.commit()
+                    cursor.close()
+                    return redirect(url_for('profile.user_profile', user_url_slug=session['user']), code=302)
+        else:
+            return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
+    else:
+        return redirect(url_for("home.login"))
