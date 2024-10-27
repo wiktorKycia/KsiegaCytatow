@@ -1,6 +1,6 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
-from config import mysql, mail
+from config import mysql, mail, send_verification_email, verify_token
 
 # Parent route
 home = Blueprint('home', __name__)
