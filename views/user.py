@@ -54,7 +54,7 @@ def user_profile():
 
 @profile.route('/send_email')
 def send_email():
-    email = session.get('user_email')
+    email = g.profile_owner.get("email")
     send_change_password_email(email)
     session.pop('user_email', None)
     return "Check your email inbox for a link"
