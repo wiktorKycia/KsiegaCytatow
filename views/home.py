@@ -40,6 +40,16 @@ def send_verification_email(user_email):
     msg.charset = 'utf-8'  # Set the encoding explicitly
     mail.send(msg)
 
+def send_change_password_email(user_email):
+    token = generate_verification_token(user_email)
+    url = url_for('profile.change_password', token=token, _external=True)
+    subject = "Password change".encode('utf-8')
+    body = f"Click the link to change your password: {url}".encode('utf-8')
+
+    msg = Message(subject=subject.decode('utf-8'), recipients=[user_email], body=body.decode('utf-8'))
+    msg.charset = 'utf-8'
+    mail.send(msg)
+
 # Routes
 @home.route('/')
 def homepage():
