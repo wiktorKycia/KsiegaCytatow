@@ -47,6 +47,13 @@ def send_verification_email(user_email):
         route='home.verify_email'
     )
 
+def send_email_with_url(email_to:str, url:str, subject:str, body_text:str):
+    subject = subject.encode('utf-8')
+    body = body_text.format(url=url).encode('utf-8') # ten url tutaj musi być już z tokenem, ale zbudować url-a można tylko w user.py
+    msg = Message(subject.decode('utf-8'), recipients=[email_to], body=body.decode('utf-8'))
+    msg.charset = 'utf-8'
+    mail.send(msg)
+
 def send_change_password_email(user_email):
     send_email(
         email_to=user_email,

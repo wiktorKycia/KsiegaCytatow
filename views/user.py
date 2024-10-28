@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, g
-from config import mysql, send_change_password_email
+from config import mysql, send_change_password_email, generate_token, send_email_with_url, verify_token
 from flask_mysqldb import MySQLdb
 from werkzeug.security import generate_password_hash, check_password_hash
 profile = Blueprint('profile', __name__)
@@ -53,17 +53,30 @@ def user_profile():
         return redirect(url_for("home.login"))
 
 @profile.route('/send_email')
-def send_email():
+def send_email(): # tutaj gdzieś trzeba wygenerować url-a, który będzie miał już tokena
     email = g.profile_owner.get("email")
+    token = generate_token(email)
+    send_email_with_url(
+        email, url_for("profile.change_pass", token=token, _external=True),
+        "Password change",
+        "Click the link here to change your password {url}",
+    )
     send_change_password_email(email)
-    session.pop('user_email', None)
+    session.pop('user_email', None)# to trzeba usunąć
     return "Check your email inbox for a link"
 
-@profile.route('/change_password', methods=['GET', 'POST'])
-def change_password():
+@profile.route('/change_password/<token>', methods=['GET', 'POST'])
+def change_password(token): # tutaj potrzebny jest parametr <token> i jego weryfikacja jak w home.py
     if "user" in session:
         if g.profile_owner.get('name') == session['user']:
             user = g.profile_owner
+
+            try:
+                email = verify_token(token)
+            except:
+                print('The verification link is invalid or has expired.')
+                # flash('The verification link is invalid or has expired.', 'danger')
+                return redirect(url_for('index'))
 
             if request.method == 'GET':
                 return render_template("profile/change_password.html", password_not_match=False)
