@@ -50,8 +50,13 @@ def login():
             return abort(500)
         else:
             user = users[0]
-            hashed_password = generate_password_hash(request.form['password'])
-            if check_password_hash(user[0][2], hashed_password):
+            # print(user)
+            # print(user[2])
+            # hashed = generate_password_hash(request.form['password'])
+            # print(hashed == user[2])
+            # print(check_password_hash(user[2], request.form['password']))
+
+            if check_password_hash(user[2], request.form['password']):
                 # start the session and redirect to userhomepage
                 session.permanent = True
                 session['user'] = user[0]
