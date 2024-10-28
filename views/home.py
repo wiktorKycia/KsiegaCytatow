@@ -1,6 +1,7 @@
 # Imports
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
 from config import mysql, mail, send_verification_email, verify_token
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Parent route
 home = Blueprint('home', __name__)
@@ -37,8 +38,8 @@ def login():
         cursor = mysql.connection.cursor()
         cursor.execute('''
         SELECT name, email, user_password FROM users 
-        WHERE (name=%s OR email=%s) AND user_password=%s''',
-        (request.form['username'], request.form['username'], request.form['password']))
+        WHERE (name=%s OR email=%s)''',
+        (request.form['username'], request.form['username']))
         # save the results from the database
         users:tuple[tuple[str, str, str]] = cursor.fetchall()
         cursor.close()
@@ -48,11 +49,15 @@ def login():
         if len(users) > 1:
             return abort(500)
         else:
-            # start the session and redirect to userhomepage
-            session.permanent = True
             user = users[0]
-            session['user'] = user[0]
-            return redirect(url_for('profile.user_profile', user_url_slug=user[0]))
+            hashed_password = generate_password_hash(request.form['password'])
+            if check_password_hash(user[0][2], hashed_password):
+                # start the session and redirect to userhomepage
+                session.permanent = True
+                session['user'] = user[0]
+                return redirect(url_for('profile.user_profile', user_url_slug=user[0]))
+            else:
+                return redirect(url_for('home.login'))
 
 
 @home.route('/logout')
