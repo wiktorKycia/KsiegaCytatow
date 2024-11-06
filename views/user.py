@@ -27,7 +27,7 @@ def get_profile_owner(endpoint, values):
         return redirect(url_for("home.login"))
 
 
-# TODO: enable user to change password
+
 # TODO: change nickname preferences
 # TODO: display favourite quotes
 
