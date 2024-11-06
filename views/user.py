@@ -102,3 +102,39 @@ def change_password(token): # tutaj potrzebny jest parametr <token> i jego weryf
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:
         return redirect(url_for("home.login"))
+
+# pierwsze zapytanie: dostępni autorzy i ich dostępne nicki
+# 3 tabele: authors, AuthorsNicknames, nicknames
+# przetransformować do formy: (pętla for i po kolei dodawanie autorów i cytatów do słownika)
+# dictionary = {
+#     "author_1" : [
+#         ("nick_1", False),
+#         ("nick_2", False) # <- jak będzie True, to znaczy, że ta opcja w html-u będzie selected
+#     ],
+#     "author_2" : [
+#         ("nick_3", False),
+#         ("nick_4", False)
+#     ]
+# }
+# print(dictionary)
+
+# drugie zapytanie: wybrane nicki przez użytkownika
+# id_autorów, id_nickname  tam gdzie user_id == profileowner[id]
+# do tych id-ków, dołączyć author_name, nickname
+# przetransformować do listy tupli: (nawet sql-em można wybrać, żeby były tylko stringi, w sensie bez id-ków)
+# jeśli id_nickname jest NULL to znaczy, że użytkownik nie wybrał nicku i trzeba (w html-u) wstawić author_name
+# lista = [
+#     ('author_name', 'nick'),
+#     ('author_name_2', 'nick_2')
+# ]
+# print(lista)
+
+# porównanie słownika i listy:
+# dla każdego <autor> w liście:
+# patrzymy do podlisty o kluczu <autor> w słowniku
+# tam gdzie nick w podliście w słowniku  równa się  nick w liście,
+#   tam wstawiamy True
+# print(dictionary)
+
+# sprawdzenie, czy w każdej podliście jest tylko jedno True (lub 0)
+# przekazanie słownika do html-a
