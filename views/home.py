@@ -1,6 +1,7 @@
 # Imports
-from flask import Blueprint, render_template, request, redirect, url_for, abort, session
-from db import mysql
+from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
+from config import mysql, mail, send_verification_email, verify_token
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Parent route
 home = Blueprint('home', __name__)
@@ -11,6 +12,8 @@ home = Blueprint('home', __name__)
 # TODO: add quote
 # TODO: search quotes (searchbox)
 # TODO: liking quotes
+
+
 
 # Routes
 @home.route('/')
@@ -27,7 +30,7 @@ def login():
     if request.method == 'GET':
         # if the user is already logged in, push him back to his user page
         if "user" in session:
-            return redirect(url_for('home.userhomepage'))
+            return redirect(url_for('profile.user_profile', user_url_slug=session['user']))
         return render_template('home/login.html')
     # user fills out the form and clicks submit
     elif request.method == 'POST':
@@ -35,8 +38,8 @@ def login():
         cursor = mysql.connection.cursor()
         cursor.execute('''
         SELECT name, email, user_password FROM users 
-        WHERE (name=%s OR email=%s) AND user_password=%s''',
-        (request.form['username'], request.form['username'], request.form['password']))
+        WHERE (name=%s OR email=%s)''',
+        (request.form['username'], request.form['username']))
         # save the results from the database
         users:tuple[tuple[str, str, str]] = cursor.fetchall()
         cursor.close()
@@ -46,23 +49,51 @@ def login():
         if len(users) > 1:
             return abort(500)
         else:
-            # start the session and redirect to userhomepage
-            session.permanent = True
             user = users[0]
-            session['user'] = user[0]
-            return redirect(url_for('home.userhomepage'))
+            # print(user)
+            # print(user[2])
+            # hashed = generate_password_hash(request.form['password'])
+            # print(hashed == user[2])
+            # print(check_password_hash(user[2], request.form['password']))
 
-@home.route('/user')
-def userhomepage():
-    # the user is logged in, so we allow him to view his page
-    if "user" in session:
-        return render_template('home/user.html', username=session['user'])
-    else:
-        # the user is not logged in, so we redirect him back to login
-        return redirect(url_for('home.login'))
+            if check_password_hash(user[2], request.form['password']):
+                # start the session and redirect to userhomepage
+                session.permanent = True
+                session['user'] = user[0]
+                return redirect(url_for('profile.user_profile', user_url_slug=user[0]))
+            else:
+                return redirect(url_for('home.login'))
+
 
 @home.route('/logout')
 def logout():
     session.pop("user", None)
     return redirect(url_for("home.login"))
 
+
+@home.route('/register/', methods=['GET'])
+def register():
+    email = session.get('user_email')
+    send_verification_email(email)
+    session.pop('user_email', None)
+    return "Check your email inbox for a verification link."
+
+
+@home.route('/verify/<token>')
+def verify_email(token):
+    try:
+        email = verify_token(token)
+    except:
+        print('The verification link is invalid or has expired.')
+        # flash('The verification link is invalid or has expired.', 'danger')
+        return redirect(url_for('index'))
+
+    # Update the user's trust level in the database
+    cursor = mysql.connection.cursor()
+    cursor.execute("UPDATE users SET trust_level = 2 WHERE email = %s", (email,))
+    mysql.connection.commit()
+    cursor.close()
+
+    print('Your account has been verified!')
+    # flash('Your account has been verified!', 'success')
+    return redirect(url_for('home.login'))

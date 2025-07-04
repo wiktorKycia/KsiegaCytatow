@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, g
-from db import mysql
+from config import mysql, send_change_password_email, generate_token, send_email_with_url, verify_token
 from flask_mysqldb import MySQLdb
-
+from werkzeug.security import generate_password_hash, check_password_hash
 profile = Blueprint('profile', __name__)
 
 
@@ -27,9 +27,7 @@ def get_profile_owner(endpoint, values):
         return redirect(url_for("home.login"))
 
 
-# TODO: create a folder for profile blueprint in templates
-# TODO: enable user to change password
-# TODO: email verification
+
 # TODO: change nickname preferences
 # TODO: display favourite quotes
 
@@ -39,7 +37,67 @@ def user_profile():
     if "user" in session:
         if g.profile_owner.get('name') == session['user']:
             user = g.profile_owner
-            return render_template("home/user.html", username=user)
+
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT trust_level, email FROM users WHERE name = %s', (user['name'],))
+            trust, email = cursor.fetchone()
+            cursor.close()
+            if trust < 1:
+                session['user_email'] = email
+                return render_template("profile/index.html", username=user['name'], canverify=True)
+
+            return render_template("profile/index.html", username=user['name'], canverify=False)
+        else:
+            return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
+    else:
+        return redirect(url_for("home.login"))
+
+@profile.route('/send_email')
+def send_email():
+    if "user" in session:
+        if g.profile_owner.get('name') == session['user']:
+            user = g.profile_owner
+            print(user)
+            email = user.get("email")
+            token = generate_token(email)
+            send_email_with_url(
+                email, url_for("profile.change_password", token=token, user_url_slug=session['user'], _external=True),
+                "Password change",
+                "Click the link here to change your password {url}",
+            )
+            return "Check your email inbox for a link"
+        else:
+            return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
+    else:
+        return redirect(url_for("home.login"))
+
+@profile.route('/change_password/<token>', methods=['GET', 'POST'])
+def change_password(token): # tutaj potrzebny jest parametr <token> i jego weryfikacja jak w home.py
+    if "user" in session:
+        if g.profile_owner.get('name') == session['user']:
+            user = g.profile_owner
+
+            try:
+                email = verify_token(token)
+            except:
+                print('The verification link is invalid or has expired.')
+                # flash('The verification link is invalid or has expired.', 'danger')
+                return redirect(url_for('index'))
+
+            if request.method == 'GET':
+                return render_template("profile/change_password.html", password_not_match=False)
+            elif request.method == 'POST':
+                password = request.form['password']
+                password_confirm = request.form['password2']
+                if password != password_confirm:
+                    return render_template("profile/change_password.html", password_not_match=True)
+                else:
+                    password = generate_password_hash(password)
+                    cursor = mysql.connection.cursor()
+                    cursor.execute('UPDATE users SET user_password = %s WHERE name = %s', (password, user['name']))
+                    mysql.connection.commit()
+                    cursor.close()
+                    return redirect(url_for('profile.user_profile', user_url_slug=session['user']), code=302)
         else:
             return redirect(url_for("profile.user_profile", user_url_slug=session['user']), code=302)
     else:

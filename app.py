@@ -1,14 +1,18 @@
 # Imports
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 
 from views import user
 from views.home import home
 from views.admin import admin
 from views.user import profile
-from db import mysql
+from config import mysql, mail
 from secrets import token_hex
 from datetime import timedelta
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 # Main app
 app = Flask(__name__)
 
@@ -20,7 +24,21 @@ app.config['MYSQL_DB'] = 'ksiegacytatow'
 
 mysql.init_app(app)
 
-# no need for db.py
+# Mail config
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS') == 'True'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+app.config['MAIL_ASCII_ATTACHMENTS'] = False
+
+# Using security salt for token generation
+app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
+
+mail.init_app(app)
+
+# no need for config.py
 # mysql = MySQL(app)
 # app.mysql = mysql  # Make `mysql` accessible via `current_app`
 # then in views: from flask_mysqldb import MySQLdb, current_app
@@ -34,10 +52,19 @@ app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(profile, url_prefix='/profile/<user_url_slug>')
 
+
+
+
 # Main route
 @app.route('/')
 def index():
     return redirect(url_for('home.homepage'))
+
+
+
+
+
+
 
 # Run
 if __name__ == '__main__':

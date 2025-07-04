@@ -6,4 +6,9 @@
     {% if username == 'admin' %}
         <a href="/admin/">admin panel</a>
     {% endif %}
+    {% if canverify %}
+        <a href="/home/register/">verify your email</a>
+    {% endif %}
+    <br>
+    <a href={{ url_for("profile.send_email", user_url_slug=username) }}>change password</a>
 {% endblock %}
